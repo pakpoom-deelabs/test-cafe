@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brew &amp; Co — Specialty Coffee</title>
+  <style>
+    /* ─── Design Tokens ─────────────────────────────────────────── */
+    :root {
+      --ink:       #0f0d0b;
+      --ink-2:     #1e1a15;
+      --ink-3:     #2c261e;
+      --gold:      #c8922a;
+      --gold-lt:   #e8b44a;
+      --cream:     #f5ede0;
+      --cream-2:   #ede0cc;
+      --smoke:     #a89880;
+      --white:     #fdfaf6;
+
+      --serif:     Georgia, 'Times New Roman', serif;
+      --sans:      'Helvetica Neue', Helvetica, Arial, sans-serif;
+      --mono:      'Courier New', Courier, monospace;
+
+      --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ─── Reset ─────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    img  { display: block; max-width: 100%; height: auto; }
+    a    { color: inherit; text-decoration: none; }
+    button { cursor: pointer; border: none; background: none; font: inherit; }
+
+    /* ─── Base ───────────────────────────────────────────────────── */
+    body {
+      background: var(--ink);
+      color: var(--cream);
+      font-family: var(--sans);
+      font-size: clamp(15px, 2vw, 17px);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* ─── Nav ────────────────────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 2rem;
+      mix-blend-mode: normal;
+      transition: background 0.4s, backdrop-filter 0.4s;
+    }
+    .nav.scrolled {
+      background: rgba(15, 13, 11, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      font-style: italic;
+      letter-spacing: 0.03em;
+      color: var(--gold-lt);
+    }
+    .nav-logo span { color: var(--cream); font-style: normal; }
+    .nav-links {
+      display: none;
+      gap: 2rem;
+      list-style: none;
+      font-size: 0.8rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .nav-links a { color: var(--smoke); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--gold-lt); }
+    .nav-cta {
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      border: 1px solid var(--gold);
+      color: var(--gold-lt);
+      padding: 0.5rem 1.25rem;
+      transition: background 0.2s, color 0.2s;
+    }
+    .nav-cta:hover { background: var(--gold); color: var(--ink); }
+    @media (min-width: 768px) {
+      .nav-links { display: flex; }
+      .nav { padding: 1.5rem 3rem; }
+    }
+    @media (min-width: 1280px) {
+      .nav { padding: 1.5rem 5rem; }
+    }
+
+    /* ─── Hero ───────────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://picsum.photos/seed/espresso-roast/1400/900');
+      background-size: cover;
+      background-position: center 40%;
+      filter: brightness(0.28) saturate(0.7);
+    }
+    .hero-grain {
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        transparent 40%,
+        rgba(15,13,11,0.6) 70%,
+        var(--ink) 100%
+      );
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      align-self: end;
+      padding: 0 1.75rem 4rem;
+      max-width: 860px;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 2rem;
+      height: 1px;
+      background: var(--gold);
+    }
+    .hero-h1 {
+      font-family: var(--serif);
+      font-size: clamp(3rem, 9vw, 7.5rem);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--white);
+      margin-bottom: 1.75rem;
+    }
+    .hero-h1 em {
+      font-style: italic;
+      color: var(--gold-lt);
+    }
+    .hero-sub {
+      font-size: clamp(0.95rem, 2vw, 1.15rem);
+      color: var(--cream-2);
+      max-width: 42ch;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+    .btn-primary {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--ink);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 1rem 2.25rem;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-primary:hover { background: var(--gold-lt); transform: translateY(-1px); }
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--smoke);
+      border-bottom: 1px solid transparent;
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .btn-ghost:hover { color: var(--cream); border-color: var(--cream); }
+    .hero-scroll {
+      position: absolute;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--smoke);
+      writing-mode: vertical-rl;
+    }
+    .hero-scroll::after {
+      content: '';
+      width: 1px;
+      height: 3rem;
+      background: linear-gradient(to bottom, var(--smoke), transparent);
+    }
+    @media (min-width: 768px) {
+      .hero-content { padding: 0 3rem 5rem; }
+    }
+    @media (min-width: 1280px) {
+      .hero-content { padding: 0 5rem 6rem; }
+    }
+
+    /* ─── Ticker ─────────────────────────────────────────────────── */
+    .ticker {
+      background: var(--gold);
+      color: var(--ink);
+      overflow: hidden;
+      padding: 0.65rem 0;
+    }
+    .ticker-track {
+      display: flex;
+      gap: 0;
+      white-space: nowrap;
+      animation: ticker 28s linear infinite;
+    }
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 0 2rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+    .ticker-item::after {
+      content: '◆';
+      font-size: 0.45rem;
+    }
+    @keyframes ticker {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ─── Utility ────────────────────────────────────────────────── */
+    .container {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.75rem;
+    }
+    @media (min-width: 768px)  { .container { padding: 0 3rem; } }
+    @media (min-width: 1280px) { .container { padding: 0 5rem; } }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.25rem;
+    }
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 1.5rem;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    /* ─── Editorial Intro ───────────────────────────────────────── */
+    .editorial-intro {
+      padding: 6rem 0 5rem;
+    }
+    .editorial-intro .inner {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    .editorial-intro .text-block {}
+    .editorial-intro .heading {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+    }
+    .editorial-intro .heading em { font-style: italic; color: var(--gold-lt); }
+    .editorial-intro p {
+      color: var(--smoke);
+      max-width: 52ch;
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+    .stat-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-top: 2.5rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--ink-3);
+    }
+    .stat { flex: 1; min-width: 100px; }
+    .stat-num {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 5vw, 3rem);
+      color: var(--gold-lt);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--smoke);
+      margin-top: 0.4rem;
+    }
+    .editorial-intro .image-block {
+      position: relative;
+    }
+    .editorial-intro .image-block img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      filter: saturate(0.8) brightness(0.9);
+    }
+    .image-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1.25rem;
+      background: linear-gradient(to top, rgba(15,13,11,0.85), transparent);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--smoke);
+      font-family: var(--mono);
+    }
+    @media (min-width: 768px) {
+      .editorial-intro .inner {
+        grid-template-columns: 1fr 1fr;
+        gap: 5rem;
+        align-items: center;
+      }
+    }
+
+    /* ─── Menu / Offerings ──────────────────────────────────────── */
+    .offerings {
+      padding: 5rem 0 6rem;
+      background: var(--ink-2);
+    }
+    .offerings-header {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 3.5rem;
+    }
+    .offerings-title {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      line-height: 1.1;
+      color: var(--white);
+    }
+    .offerings-desc {
+      color: var(--smoke);
+      max-width: 50ch;
+      font-size: 0.95rem;
+    }
+    @media (min-width: 768px) {
+      .offerings-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+    }
+
+    .offerings-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1px;
+      background: var(--ink-3);
+    }
+    .offer-card {
+      background: var(--ink-2);
+      padding: 2rem 1.75rem;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 1.25rem;
+      align-items: start;
+      transition: background 0.25s;
+      cursor: default;
+    }
+    .offer-card:hover { background: var(--ink-3); }
+    .offer-num {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--gold);
+      padding-top: 4px;
+      letter-spacing: 0.05em;
+    }
+    .offer-name {
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      color: var(--white);
+      margin-bottom: 0.35rem;
+    }
+    .offer-desc { font-size: 0.85rem; color: var(--smoke); line-height: 1.6; }
+    .offer-tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      border: 1px solid var(--ink-3);
+      color: var(--smoke);
+      padding: 0.3rem 0.65rem;
+      white-space: nowrap;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .offer-card:hover .offer-tag { border-color: var(--gold); color: var(--gold); }
+    @media (min-width: 768px) {
+      .offerings-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 1280px) {
+      .offerings-grid { grid-template-columns: 1fr 1fr 1fr; }
+      .offer-card { padding: 2.5rem 2.25rem; }
+    }
+
+    /* ─── Pull Quote / Philosophy ───────────────────────────────── */
+    .philosophy {
+      padding: 7rem 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .philosophy-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, var(--ink-3) 0%, var(--ink) 70%);
+    }
+    .philosophy blockquote {
+      position: relative;
+      z-index: 1;
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 4.5vw, 3.2rem);
+      font-style: italic;
+      line-height: 1.3;
+      color: var(--white);
+      max-width: 820px;
+      margin: 0 auto 2rem;
+      letter-spacing: -0.01em;
+    }
+    .philosophy blockquote::before {
+      content: '\201C';
+      font-size: 6rem;
+      color: var(--gold);
+      line-height: 0;
+      vertical-align: -2.5rem;
+      margin-right: 0.1em;
+      font-style: normal;
+      opacity: 0.6;
+    }
+    .philosophy cite {
+      position: relative;
+      z-index: 1;
+      display: block;
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-style: normal;
+    }
+
+    /* ─── Origin Story ──────────────────────────────────────────── */
+    .story {
+      padding: 6rem 0;
+    }
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 4rem;
+    }
+    @media (min-width: 768px) {
+      .story-grid {
+        grid-template-columns: 5fr 7fr;
+        gap: 6rem;
+        align-items: center;
+      }
+    }
+    .story-images {
+      position: relative;
+    }
+    .story-img-main {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      filter: saturate(0.75) brightness(0.85);
+    }
+    .story-img-inset {
+      display: none;
+      position: absolute;
+      bottom: -2rem;
+      right: -2rem;
+      width: 48%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border: 4px solid var(--ink);
+      filter: saturate(0.75) brightness(0.9);
+    }
+    @media (min-width: 768px) { .story-img-inset { display: block; } }
+    .story-text {}
+    .story-heading {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+    }
+    .story-heading em { font-style: italic; color: var(--gold-lt); }
+    .story-text p {
+      color: var(--smoke);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+    .story-milestones {
+      margin-top: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .milestone {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+    }
+    .milestone-year {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--gold);
+      letter-spacing: 0.08em;
+      min-width: 3.5rem;
+      padding-top: 3px;
+    }
+    .milestone-text {
+      font-size: 0.9rem;
+      color: var(--smoke);
+      border-top: 1px solid var(--ink-3);
+      padding-top: 0.75rem;
+      flex: 1;
+    }
+
+    /* ─── Social Proof ──────────────────────────────────────────── */
+    .social-proof {
+      padding: 6rem 0;
+      background: var(--ink-2);
+      overflow: hidden;
+    }
+    .reviews-header {
+      margin-bottom: 3rem;
+    }
+    .reviews-heading {
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      color: var(--white);
+      line-height: 1.2;
+    }
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1px;
+      background: var(--ink-3);
+    }
+    .review-card {
+      background: var(--ink-2);
+      padding: 2.25rem 2rem;
+    }
+    .review-stars {
+      display: flex;
+      gap: 3px;
+      margin-bottom: 1rem;
+    }
+    .star {
+      width: 12px;
+      height: 12px;
+      background: var(--gold);
+      clip-path: polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+    }
+    .review-text {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1.05rem;
+      color: var(--cream);
+      line-height: 1.65;
+      margin-bottom: 1.5rem;
+    }
+    .reviewer {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .reviewer-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--ink-3);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .reviewer-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.6) brightness(0.8);
+    }
+    .reviewer-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--cream);
+      letter-spacing: 0.04em;
+    }
+    .reviewer-handle {
+      font-size: 0.72rem;
+      color: var(--smoke);
+    }
+    @media (min-width: 768px) {
+      .reviews-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 1280px) {
+      .reviews-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    /* ─── Gallery Strip ─────────────────────────────────────────── */
+    .gallery {
+      padding: 0;
+      overflow: hidden;
+    }
+    .gallery-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+    }
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.65) brightness(0.75);
+      transition: transform 0.7s var(--ease-out), filter 0.5s;
+    }
+    .gallery-item:hover img {
+      transform: scale(1.06);
+      filter: saturate(0.9) brightness(0.85);
+    }
+    @media (min-width: 768px) {
+      .gallery-strip {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+
+    /* ─── Visit / Location ──────────────────────────────────────── */
+    .visit {
+      padding: 6rem 0;
+    }
+    .visit-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    @media (min-width: 768px) {
+      .visit-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 5rem;
+        align-items: start;
+      }
+    }
+    .visit-heading {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--white);
+      margin-bottom: 1.25rem;
+      line-height: 1.15;
+    }
+    .visit p {
+      color: var(--smoke);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+    .hours-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+    }
+    .hours-table tr {
+      border-bottom: 1px solid var(--ink-3);
+    }
+    .hours-table td {
+      padding: 0.75rem 0;
+      font-size: 0.88rem;
+    }
+    .hours-table td:first-child { color: var(--smoke); }
+    .hours-table td:last-child { color: var(--cream); text-align: right; }
+    .visit-map {
+      background: var(--ink-3);
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      position: relative;
+    }
+    .visit-map img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.3) brightness(0.55) sepia(0.4);
+      transition: filter 0.4s;
+    }
+    .visit-map:hover img { filter: saturate(0.5) brightness(0.65) sepia(0.2); }
+    .map-pin {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 12px;
+      height: 12px;
+      background: var(--gold);
+      border-radius: 50%;
+      box-shadow: 0 0 0 4px rgba(200,146,42,0.3), 0 0 0 10px rgba(200,146,42,0.1);
+    }
+    .address-block {
+      margin-top: 1.5rem;
+    }
+    .address-block address {
+      font-style: normal;
+      font-size: 0.88rem;
+      color: var(--smoke);
+      line-height: 1.7;
+    }
+    .address-block .area {
+      display: inline-block;
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.4rem;
+    }
+
+    /* ─── CTA Banner ────────────────────────────────────────────── */
+    .cta-banner {
+      position: relative;
+      padding: 7rem 0;
+      overflow: hidden;
+      text-align: center;
+    }
+    .cta-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://picsum.photos/seed/dark-coffee-table/1400/600');
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.18) saturate(0.5);
+    }
+    .cta-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(200,146,42,0.08) 0%, transparent 70%);
+    }
+    .cta-content {
+      position: relative;
+      z-index: 2;
+    }
+    .cta-content .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+    .cta-content .eyebrow::before,
+    .cta-content .eyebrow::after {
+      content: '';
+      display: block;
+      width: 2rem;
+      height: 1px;
+      background: var(--gold);
+    }
+    .cta-heading {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 6vw, 4.5rem);
+      line-height: 1.05;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
+    }
+    .cta-heading em { font-style: italic; color: var(--gold-lt); }
+    .cta-sub {
+      color: var(--smoke);
+      font-size: 1rem;
+      max-width: 48ch;
+      margin: 0 auto 2.5rem;
+    }
+    .cta-input-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+    .cta-input {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--ink-3);
+      color: var(--cream);
+      font: inherit;
+      font-size: 0.9rem;
+      padding: 0.9rem 1.25rem;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+    .cta-input::placeholder { color: var(--smoke); }
+    .cta-input:focus { border-color: var(--gold); }
+    .cta-submit {
+      background: var(--gold);
+      color: var(--ink);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 1rem 2rem;
+      width: 100%;
+      transition: background 0.2s;
+    }
+    .cta-submit:hover { background: var(--gold-lt); }
+    .cta-note {
+      margin-top: 1rem;
+      font-size: 0.72rem;
+      color: var(--ink-3);
+      /* invisible — readable only on lighter bg; purely decorative spacing */
+      color: rgba(168,152,128,0.5);
+    }
+    @media (min-width: 768px) {
+      .cta-input-row {
+        flex-direction: row;
+        max-width: 520px;
+      }
+      .cta-submit { width: auto; white-space: nowrap; }
+    }
+
+    /* ─── Footer ────────────────────────────────────────────────── */
+    footer {
+      background: var(--ink);
+      border-top: 1px solid var(--ink-3);
+      padding: 3.5rem 0 2rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+      margin-bottom: 3rem;
+    }
+    @media (min-width: 768px) {
+      .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; }
+    }
+    .footer-brand {}
+    .footer-logo {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-style: italic;
+      color: var(--gold-lt);
+      margin-bottom: 0.75rem;
+    }
+    .footer-logo span { color: var(--white); font-style: normal; }
+    .footer-tagline {
+      font-size: 0.82rem;
+      color: var(--smoke);
+      max-width: 28ch;
+      line-height: 1.65;
+    }
+    .footer-col-title {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cream);
+      margin-bottom: 1rem;
+    }
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .footer-links a {
+      font-size: 0.85rem;
+      color: var(--smoke);
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--gold-lt); }
+    .footer-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding-top: 1.75rem;
+      border-top: 1px solid var(--ink-3);
+    }
+    .footer-copy {
+      font-size: 0.72rem;
+      color: var(--smoke);
+      letter-spacing: 0.05em;
+    }
+    .footer-socials {
+      display: flex;
+      gap: 1.25rem;
+    }
+    .footer-socials a {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--smoke);
+      transition: color 0.2s;
+    }
+    .footer-socials a:hover { color: var(--gold-lt); }
+
+    /* ─── Animations ─────────────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* ─── No-JS fallback ─────────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      .ticker-track { animation: none; }
+      .gallery-item img { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ──────────────────────────────────────────── -->
+  <nav class="nav" id="nav" aria-label="Main navigation">
+    <div class="nav-logo">Brew<span> &amp; Co</span></div>
+    <ul class="nav-links" role="list">
+      <li><a href="#offerings">Menu</a></li>
+      <li><a href="#story">Our Story</a></li>
+      <li><a href="#visit">Visit</a></li>
+      <li><a href="#community">Community</a></li>
+    </ul>
+    <a href="#cta" class="nav-cta">Reserve a Table</a>
+  </nav>
+
+  <main>
+
+    <!-- ── Hero ────────────────────────────────────────────────── -->
+    <section class="hero" aria-label="Hero">
+      <div class="hero-bg" role="img" aria-label="Coffee being brewed in a dark, atmospheric café"></div>
+      <div class="hero-grain" aria-hidden="true"></div>
+      <div class="hero-overlay" aria-hidden="true"></div>
+      <div class="hero-content">
+        <p class="hero-eyebrow">Specialty Coffee, Crafted with Intent</p>
+        <h1 class="hero-h1">
+          Where <em>craft</em><br>meets<br>community.
+        </h1>
+        <p class="hero-sub">
+          Brew &amp; Co is a specialty coffee bar for the curious and the driven —
+          a space to slow down, taste deeply, and belong to something worth returning to.
+        </p>
+        <div class="hero-actions">
+          <a href="#offerings" class="btn-primary">Explore the Menu</a>
+          <a href="#story" class="btn-ghost">
+            Our Story
+            <svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true">
+              <path d="M0 5h14M10 1l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+      <span class="hero-scroll" aria-hidden="true">Scroll</span>
+    </section>
+
+    <!-- ── Ticker ───────────────────────────────────────────────── -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <!-- duplicated for seamless loop -->
+        <span class="ticker-item">Single Origin Espresso</span>
+        <span class="ticker-item">Seasonal Pour Overs</span>
+        <span class="ticker-item">Cold Brew &amp; Nitro</span>
+        <span class="ticker-item">Artisan Pastries Daily</span>
+        <span class="ticker-item">Weekend Cupping Events</span>
+        <span class="ticker-item">Specialty Roasts</span>
+        <span class="ticker-item">Community Tables</span>
+        <span class="ticker-item">Single Origin Espresso</span>
+        <span class="ticker-item">Seasonal Pour Overs</span>
+        <span class="ticker-item">Cold Brew &amp; Nitro</span>
+        <span class="ticker-item">Artisan Pastries Daily</span>
+        <span class="ticker-item">Weekend Cupping Events</span>
+        <span class="ticker-item">Specialty Roasts</span>
+        <span class="ticker-item">Community Tables</span>
+      </div>
+    </div>
+
+    <!-- ── Editorial Intro ──────────────────────────────────────── -->
+    <section class="editorial-intro" aria-label="About Brew &amp; Co">
+      <div class="container">
+        <div class="inner">
+          <div class="text-block reveal">
+            <p class="section-label">The Difference</p>
+            <h2 class="heading">
+              Coffee as a<br><em>daily ritual,</em><br>not a habit.
+            </h2>
+            <p>
+              Most coffee is designed to be forgotten. Ours is designed to be remembered.
+              Every cup at Brew &amp; Co begins long before it reaches your hands — with
+              direct-trade relationships, obsessive sourcing, and baristas who genuinely care.
+            </p>
+            <p>
+              For the young professional who refuses to compromise on what fuels their day,
+              we offer something rare: consistency you can count on, and nuance worth exploring.
+            </p>
+            <div class="stat-row">
+              <div class="stat">
+                <div class="stat-num">12+</div>
+                <div class="stat-label">Origin Partners</div>
+              </div>
+              <div class="stat">
+                <div class="stat-num">6</div>
+                <div class="stat-label">Years Roasting</div>
+              </div>
+              <div class="stat">
+                <div class="stat-num">4.9★</div>
+                <div class="stat-label">Community Rating</div>
+              </div>
+            </div>
+          </div>
+          <div class="image-block reveal reveal-delay-2">
+            <img
+              src="https://picsum.photos/seed/barista-craft/800/600"
+              alt="Barista carefully pouring a filter coffee"
+              width="800" height="600"
+              loading="lazy"
+            />
+            <p class="image-caption">Our head barista, hand-pouring a Kenya AA, 06:40 AM</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Offerings ────────────────────────────────────────────── -->
+    <section class="offerings" id="offerings" aria-label="Menu highlights">
+      <div class="container">
+        <div class="offerings-header reveal">
+          <div>
+            <p class="section-label">The Menu</p>
+            <h2 class="offerings-title">
+              Built for<br>the discerning palate.
+            </h2>
+          </div>
+          <p class="offerings-desc">
+            A rotating selection anchored by three espresso blends and
+            six single-origin pour overs. Seasonal, always.
+          </p>
+        </div>
+        <div class="offerings-grid" role="list">
+
+          <article class="offer-card reveal" role="listitem">
+            <span class="offer-num">01</span>
+            <div>
+              <h3 class="offer-name">Signature Espresso</h3>
+              <p class="offer-desc">Our house blend — dark chocolate, dried fruit, and a clean finish that holds milk beautifully.</p>
+            </div>
+            <span class="offer-tag">Espresso</span>
+          </article>
+
+          <article class="offer-card reveal reveal-delay-1" role="listitem">
+            <span class="offer-num">02</span>
+            <div>
+              <h3 class="offer-name">Seasonal Pour Over</h3>
+              <p class="offer-desc">Rotates monthly. Right now: Ethiopia Yirgacheffe — jasmine, bergamot, stone fruit.</p>
+            </div>
+            <span class="offer-tag">Filter</span>
+          </article>
+
+          <article class="offer-card reveal reveal-delay-2" role="listitem">
+            <span class="offer-num">03</span>
+            <div>
+              <h3 class="offer-name">Cold Brew Concentrate</h3>
+              <p class="offer-desc">Steeped 22 hours in cold water. Bold, smooth, with none of the bitter bite.</p>
+            </div>
+            <span class="offer-tag">Cold</span>
+          </article>
+
+          <article class="offer-card reveal reveal-delay-3" role="listitem">
+            <span class="offer-num">04</span>
+            <div>
+              <h3 class="offer-name">Flat White</h3>
+              <p class="offer-desc">Double ristretto, silky microfoam. The drink that separates good cafés from great ones.</p>
+            </div>
+            <span class="offer-tag">Milk</span>
+          </article>
+
+          <article class="offer-card reveal" role="listitem">
+            <span class="offer-num">05</span>
+            <div>
+              <h3 class="offer-name">Nitro Cold Brew</h3>
+              <p class="offer-desc">Nitrogen-infused for a naturally sweet, creamy texture — no sugar, no dairy needed.</p>
+            </div>
+            <span class="offer-tag">Signature</span>
+          </article>
+
+          <article class="offer-card reveal reveal-delay-1" role="listitem">
+            <span class="offer-num">06</span>
+            <div>
+              <h3 class="offer-name">Pastry Pairings</h3>
+              <p class="offer-desc">Sourced from a local bakery. Cardamom knot, almond croissant, dark chocolate brownie.</p>
+            </div>
+            <span class="offer-tag">Kitchen</span>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Philosophy Pull Quote ─────────────────────────────────── -->
+    <section class="philosophy" aria-label="Our philosophy">
+      <div class="philosophy-bg" aria-hidden="true"></div>
+      <div class="container">
+        <blockquote class="reveal">
+          A great cup of coffee doesn't need an explanation.
+          It just needs your full attention.
+        </blockquote>
+        <cite class="reveal reveal-delay-1">— The Brew &amp; Co Philosophy</cite>
+      </div>
+    </section>
+
+    <!-- ── Origin Story ──────────────────────────────────────────── -->
+    <section class="story" id="story" aria-label="Our story">
+      <div class="container">
+        <div class="story-grid">
+          <div class="story-images reveal">
+            <img
+              class="story-img-main"
+              src="https://picsum.photos/seed/cafe-interior-dark/600/800"
+              alt="Interior of Brew &amp; Co café, warm lighting, wooden surfaces"
+              width="600" height="800"
+              loading="lazy"
+            />
+            <img
+              class="story-img-inset"
+              src="https://picsum.photos/seed/coffee-roasting/400/400"
+              alt="Green coffee beans being sorted by hand"
+              width="400" height="400"
+              loading="lazy"
+            />
+          </div>
+          <div class="story-text reveal reveal-delay-1">
+            <p class="section-label">Our Story</p>
+            <h2 class="story-heading">
+              Started from a<br>single <em>obsession.</em>
+            </h2>
+            <p>
+              Brew &amp; Co was never supposed to be a business. It began as an
+              after-hours experiment — founder Mira Chen and two friends, a rented
+              roaster, and an unhealthy amount of curiosity about what great coffee
+              could taste like.
+            </p>
+            <p>
+              That obsession turned into a small pop-up, then a permanent space in
+              Thong Lo, and eventually into a community of regulars who became the
+              heartbeat of the place. We didn't build an audience. We found our people.
+            </p>
+            <div class="story-milestones" role="list">
+              <div class="milestone" role="listitem">
+                <span class="milestone-year">2018</span>
+                <p class="milestone-text">Founded in a shared kitchen. First roast: a natural Ethiopian that changed everything.</p>
+              </div>
+              <div class="milestone" role="listitem">
+                <span class="milestone-year">2020</span>
+                <p class="milestone-text">Opened the flagship café on Sukhumvit Soi 36. 28 seats. Always full by 9 AM.</p>
+              </div>
+              <div class="milestone" role="listitem">
+                <span class="milestone-year">2023</span>
+                <p class="milestone-text">Launched direct-trade partnerships across three continents. Quality, not convenience.</p>
+              </div>
+              <div class="milestone" role="listitem">
+                <span class="milestone-year">Now</span>
+                <p class="milestone-text">Still the same obsession. Just more people sharing it with us.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Gallery Strip ──────────────────────────────────────────── -->
+    <div class="gallery" aria-hidden="true">
+      <div class="gallery-strip">
+        <div class="gallery-item">
+          <img src="https://picsum.photos/seed/coffee-cup-art/400/533" alt="" width="400" height="533" loading="lazy">
+        </div>
+        <div class="gallery-item">
+          <img src="https://picsum.photos/seed/cafe-window-light/400/533" alt="" width="400" height="533" loading="lazy">
+        </div>
+        <div class="gallery-item">
+          <img src="https://picsum.photos/seed/coffee-beans-macro/400/533" alt="" width="400" height="533" loading="lazy">
+        </div>
+        <div class="gallery-item">
+          <img src="https://picsum.photos/seed/barista-hands/400/533" alt="" width="400" height="533" loading="lazy">
+        </div>
+        <div class="gallery-item" style="display:none" id="gallery5th">
+          <img src="https://picsum.photos/seed/cafe-table-morning/400/533" alt="" width="400" height="533" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Social Proof ───────────────────────────────────────────── -->
+    <section class="social-proof" id="community" aria-label="Customer reviews">
+      <div class="container">
+        <div class="reviews-header reveal">
+          <p class="section-label">The Community</p>
+          <h2 class="reviews-heading">
+            Regulars don't just<br>come back for the coffee.
+          </h2>
+        </div>
+        <div class="reviews-grid" role="list">
+
+          <article class="review-card reveal" role="listitem">
+            <div class="review-stars" aria-label="5 stars">
+              <div class="star"></div><div class="star"></div><div class="star"></div>
+              <div class="star"></div><div class="star"></div>
+            </div>
+            <p class="review-text">
+              "I've tried every specialty café in Bangkok. Brew &amp; Co is the only one
+              where the quality is the same whether it's a Monday at 7 AM or a Sunday afternoon."
+            </p>
+            <div class="reviewer">
+              <div class="reviewer-avatar">
+                <img src="https://picsum.photos/seed/reviewer-1/80/80" alt="" width="80" height="80" loading="lazy">
+              </div>
+              <div>
+                <div class="reviewer-name">Thanakorn W.</div>
+                <div class="reviewer-handle">Product Manager · Regular since 2021</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="review-card reveal reveal-delay-1" role="listitem">
+            <div class="review-stars" aria-label="5 stars">
+              <div class="star"></div><div class="star"></div><div class="star"></div>
+              <div class="star"></div><div class="star"></div>
+            </div>
+            <p class="review-text">
+              "The barista remembered exactly how I take my flat white after my second visit.
+              That's not service — that's craft. I don't go anywhere else now."
+            </p>
+            <div class="reviewer">
+              <div class="reviewer-avatar">
+                <img src="https://picsum.photos/seed/reviewer-2/80/80" alt="" width="80" height="80" loading="lazy">
+              </div>
+              <div>
+                <div class="reviewer-name">Siriwan K.</div>
+                <div class="reviewer-handle">Architect · Daily visitor</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="review-card reveal reveal-delay-2" role="listitem">
+            <div class="review-stars" aria-label="5 stars">
+              <div class="star"></div><div class="star"></div><div class="star"></div>
+              <div class="star"></div><div class="star"></div>
+            </div>
+            <p class="review-text">
+              "The monthly cupping sessions changed how I understand coffee entirely.
+              The team genuinely wants you to taste the difference — not just spend more."
+            </p>
+            <div class="reviewer">
+              <div class="reviewer-avatar">
+                <img src="https://picsum.photos/seed/reviewer-3/80/80" alt="" width="80" height="80" loading="lazy">
+              </div>
+              <div>
+                <div class="reviewer-name">James O.</div>
+                <div class="reviewer-handle">UX Designer · Weekend regular</div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Visit / Location ───────────────────────────────────────── -->
+    <section class="visit" id="visit" aria-label="Visit us">
+      <div class="container">
+        <div class="visit-grid">
+          <div class="reveal">
+            <p class="section-label">Find Us</p>
+            <h2 class="visit-heading">
+              Come for the coffee.<br>Stay for everything else.
+            </h2>
+            <p>
+              We're tucked into Sukhumvit Soi 36 — close enough to the BTS to be convenient,
+              far enough away to feel like a discovery. The kind of place you keep almost
+              to yourself.
+            </p>
+            <table class="hours-table" aria-label="Opening hours">
+              <tbody>
+                <tr><td>Monday – Friday</td><td>7:00 AM – 7:00 PM</td></tr>
+                <tr><td>Saturday</td><td>8:00 AM – 8:00 PM</td></tr>
+                <tr><td>Sunday</td><td>8:00 AM – 6:00 PM</td></tr>
+                <tr><td>Public Holidays</td><td>9:00 AM – 5:00 PM</td></tr>
+              </tbody>
+            </table>
+            <div class="address-block">
+              <span class="area">Location</span>
+              <address>
+                Brew &amp; Co Specialty Coffee<br>
+                42/3 Sukhumvit Soi 36<br>
+                Khlong Toei, Bangkok 10110<br>
+                <br>
+                +66 2 000 1234<br>
+                hello@brewandco.coffee
+              </address>
+            </div>
+          </div>
+          <div class="reveal reveal-delay-2">
+            <div class="visit-map" aria-label="Map showing Brew &amp; Co location">
+              <img
+                src="https://picsum.photos/seed/bangkok-street-map/700/525"
+                alt="Street-level view near Brew &amp; Co, Sukhumvit Soi 36"
+                width="700" height="525"
+                loading="lazy"
+              />
+              <div class="map-pin" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CTA Banner ──────────────────────────────────────────────── -->
+    <section class="cta-banner" id="cta" aria-label="Join the community">
+      <div class="cta-bg" role="img" aria-label="Dark café atmosphere"></div>
+      <div class="cta-overlay" aria-hidden="true"></div>
+      <div class="container cta-content">
+        <p class="eyebrow reveal">Stay in the Loop</p>
+        <h2 class="cta-heading reveal reveal-delay-1">
+          First to know.<br><em>First to taste.</em>
+        </h2>
+        <p class="cta-sub reveal reveal-delay-2">
+          New origins, cupping events, and limited-edition roasts — delivered to your
+          inbox before they're announced anywhere else.
+        </p>
+        <form class="cta-input-row reveal reveal-delay-3" aria-label="Email subscription">
+          <label for="email-input" class="visually-hidden">Email address</label>
+          <input
+            id="email-input"
+            class="cta-input"
+            type="email"
+            placeholder="your@email.com"
+            autocomplete="email"
+            required
+          />
+          <button type="submit" class="cta-submit">Subscribe</button>
+        </form>
+        <p class="cta-note reveal">No spam. Unsubscribe at any time. We take your inbox seriously.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ──────────────────────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">Brew<span> &amp; Co</span></div>
+          <p class="footer-tagline">
+            Specialty coffee for people who believe that how you start your day matters.
+          </p>
+        </div>
+        <div>
+          <p class="footer-col-title">Menu</p>
+          <ul class="footer-links" role="list">
+            <li><a href="#offerings">Espresso Bar</a></li>
+            <li><a href="#offerings">Pour Overs</a></li>
+            <li><a href="#offerings">Cold Brew</a></li>
+            <li><a href="#offerings">Kitchen</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col-title">Visit</p>
+          <ul class="footer-links" role="list">
+            <li><a href="#visit">Location</a></li>
+            <li><a href="#visit">Hours</a></li>
+            <li><a href="#cta">Private Events</a></li>
+            <li><a href="#cta">Wholesale</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col-title">Community</p>
+          <ul class="footer-links" role="list">
+            <li><a href="#story">Our Story</a></li>
+            <li><a href="#community">Reviews</a></li>
+            <li><a href="#cta">Cupping Events</a></li>
+            <li><a href="#cta">Newsletter</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">&copy; 2024 Brew &amp; Co. All rights reserved.</p>
+        <div class="footer-socials">
+          <a href="#" aria-label="Instagram">Instagram</a>
+          <a href="#" aria-label="Facebook">Facebook</a>
+          <a href="#" aria-label="Line">Line</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ── Visually hidden utility ─────────────────────────────────── -->
+  <style>
+    .visually-hidden {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+
+  <!-- ── JavaScript (progressive enhancement) ─────────────────────── -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* ── Scroll-aware nav ── */
+      var nav = document.getElementById('nav');
+      function updateNav() {
+        if (window.scrollY > 60) {
+          nav.classList.add('scrolled');
+        } else {
+          nav.classList.remove('scrolled');
+        }
+      }
+      window.addEventListener('scroll', updateNav, { passive: true });
+      updateNav();
+
+      /* ── Intersection observer reveal ── */
+      var reveals = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        reveals.forEach(function (el) { observer.observe(el); });
+      } else {
+        /* Fallback for old browsers */
+        reveals.forEach(function (el) { el.classList.add('visible'); });
+      }
+
+      /* ── Show 5th gallery image on wider screens ── */
+      var fifth = document.getElementById('gallery5th');
+      function checkGallery() {
+        if (fifth) fifth.style.display = window.innerWidth >= 768 ? 'block' : 'none';
+      }
+      window.addEventListener('resize', checkGallery, { passive: true });
+      checkGallery();
+
+      /* ── Email form ── */
+      var form = document.querySelector('.cta-input-row');
+      if (form) {
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var input = form.querySelector('input[type="email"]');
+          var btn   = form.querySelector('button[type="submit"]');
+          if (!input.value) return;
+          btn.textContent = 'You\'re in ✓';
+          btn.style.background = '#2c7a4b';
+          btn.style.color = '#fdfaf6';
+          input.disabled = true;
+          btn.disabled   = true;
+        });
+      }
+    })();
+  </script>
+
+</body>
+</html>

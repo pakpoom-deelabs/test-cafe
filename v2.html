@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brew &amp; Co — Specialty Coffee Bangkok</title>
+  <style>
+    :root {
+      --espresso:    #120a06;
+      --dark-roast:  #1c1009;
+      --med-roast:   #2b1810;
+      --light-roast: #4a2c1a;
+      --amber:       #c8893a;
+      --amber-light: #e0a050;
+      --cream:       #f5ede0;
+      --cream-dim:   #fdf8f3;
+      --muted:       #8a7060;
+      --font-serif:  Georgia, 'Times New Roman', Times, serif;
+      --font-sans:   -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      --ease:        all 0.3s ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--espresso);
+      color: var(--cream);
+      font-family: var(--font-sans);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    img { display: block; max-width: 100%; }
+    a   { color: inherit; text-decoration: none; }
+
+    /* ── NAV ────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.5rem 2.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: background 0.4s, border-color 0.4s;
+      border-bottom: 1px solid transparent;
+    }
+
+    nav.scrolled {
+      background: rgba(18,10,6,0.96);
+      backdrop-filter: blur(14px);
+      border-bottom-color: rgba(255,255,255,0.06);
+    }
+
+    .nav-logo {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: normal;
+      letter-spacing: 0.04em;
+    }
+    .nav-logo span { color: var(--amber); }
+
+    .nav-links {
+      display: flex; gap: 2.5rem; list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.8rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted);
+      transition: color 0.25s;
+    }
+    .nav-links a:hover { color: var(--cream); }
+
+    .nav-btn {
+      padding: 0.6rem 1.6rem;
+      border: 1px solid var(--amber);
+      color: var(--amber);
+      font-family: var(--font-sans);
+      font-size: 0.78rem; letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: none; cursor: pointer;
+      transition: var(--ease);
+    }
+    .nav-btn:hover { background: var(--amber); color: var(--espresso); }
+
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; background: none; border: none; padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--cream); transition: var(--ease);
+    }
+
+    /* ── HERO (SPLIT) ───────────────────────────────────── */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+    }
+
+    .hero-left {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 9rem 4.5rem 5rem;
+      background: var(--espresso);
+      position: relative; z-index: 2;
+    }
+
+    .eyebrow {
+      font-size: 0.7rem; letter-spacing: 0.28em;
+      text-transform: uppercase; color: var(--amber);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(3.25rem, 5.5vw, 6.5rem);
+      font-weight: normal; line-height: 1.06;
+      color: var(--cream-dim);
+      margin-bottom: 1.75rem;
+    }
+    .hero-title em { font-style: italic; color: var(--amber); }
+
+    .hero-sub {
+      font-size: 1rem; color: var(--muted);
+      max-width: 380px; line-height: 1.75;
+      margin-bottom: 2.75rem;
+    }
+
+    .hero-actions { display: flex; align-items: center; gap: 2rem; }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      background: var(--amber); color: var(--espresso);
+      font-size: 0.8rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      transition: var(--ease);
+    }
+    .btn-primary:hover { background: var(--amber-light); transform: translateY(-2px); }
+
+    .text-link {
+      font-size: 0.85rem; color: var(--muted);
+      border-bottom: 1px solid transparent;
+      transition: var(--ease);
+    }
+    .text-link:hover { color: var(--cream); border-bottom-color: var(--amber); }
+
+    .hero-stats {
+      display: flex; gap: 3rem;
+      margin-top: 4rem; padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .stat-num {
+      font-family: var(--font-serif);
+      font-size: 2rem; color: var(--amber); line-height: 1;
+    }
+    .stat-lbl {
+      font-size: 0.7rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    .hero-right {
+      position: relative; overflow: hidden;
+    }
+    .hero-right img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: brightness(0.8) saturate(0.85);
+    }
+    .hero-right::after {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(to right,  var(--espresso) 0%, transparent 28%),
+        linear-gradient(to top,    var(--espresso) 0%, transparent 25%);
+    }
+
+    .hero-badge {
+      position: absolute; bottom: 2.5rem; right: 2.5rem; z-index: 3;
+      width: 110px; height: 110px; border-radius: 50%;
+      background: var(--amber);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; color: var(--espresso);
+    }
+    .hero-badge-yr {
+      font-family: var(--font-serif);
+      font-size: 1.7rem; line-height: 1;
+    }
+    .hero-badge-lbl {
+      font-size: 0.6rem; letter-spacing: 0.18em;
+      text-transform: uppercase; margin-top: 0.2rem;
+    }
+
+    /* ── MARQUEE ────────────────────────────────────────── */
+    .marquee {
+      background: var(--amber); overflow: hidden;
+      padding: 0.65rem 0;
+    }
+    .marquee-track {
+      display: flex; white-space: nowrap;
+      animation: ticker 22s linear infinite;
+    }
+    .marquee-item {
+      display: inline-flex; align-items: center; gap: 2rem;
+      padding: 0 2rem;
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--espresso);
+    }
+    .dot {
+      display: inline-block; width: 4px; height: 4px;
+      border-radius: 50%; background: var(--espresso); opacity: 0.4;
+    }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ── SHARED SECTION LAYOUT ──────────────────────────── */
+    .section-wrap {
+      max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+    }
+    .section-lbl {
+      font-size: 0.7rem; letter-spacing: 0.28em;
+      text-transform: uppercase; color: var(--amber);
+      margin-bottom: 1rem;
+    }
+    .section-h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 3.5vw, 3.25rem);
+      font-weight: normal; line-height: 1.18;
+      color: var(--cream-dim);
+    }
+    .section-p {
+      color: var(--muted); line-height: 1.75; font-size: 1rem;
+    }
+
+    /* ── FEATURES ───────────────────────────────────────── */
+    .features { padding: 7rem 0; }
+
+    .features-head {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: end;
+      margin-bottom: 4rem;
+    }
+
+    .features-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 2px; background: rgba(255,255,255,0.04);
+    }
+    .feat-card {
+      background: var(--dark-roast);
+      padding: 2.75rem 2.25rem;
+      transition: background 0.25s;
+    }
+    .feat-card:hover { background: var(--med-roast); }
+
+    .feat-icon {
+      width: 44px; height: 44px;
+      color: var(--amber); margin-bottom: 1.5rem;
+    }
+    .feat-title {
+      font-family: var(--font-serif);
+      font-size: 1.3rem; font-weight: normal;
+      color: var(--cream); margin-bottom: 0.75rem;
+    }
+    .feat-text { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+
+    /* ── MANIFESTO ──────────────────────────────────────── */
+    .manifesto {
+      padding: 9rem 2rem;
+      background: var(--dark-roast);
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .manifesto::before {
+      content: '\201C';
+      position: absolute; top: -3rem; left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-serif);
+      font-size: 22rem; line-height: 1;
+      color: rgba(200,137,58,0.04);
+      pointer-events: none;
+    }
+    .manifesto blockquote {
+      font-family: var(--font-serif);
+      font-size: clamp(1.65rem, 3vw, 2.75rem);
+      font-style: italic; line-height: 1.45;
+      color: var(--cream-dim);
+      max-width: 860px; margin: 0 auto 1.75rem;
+      position: relative;
+    }
+    .manifesto-attr {
+      font-size: 0.78rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--amber);
+    }
+
+    /* ── MENU ───────────────────────────────────────────── */
+    .menu-section { padding: 7rem 0; }
+
+    .menu-head { text-align: center; margin-bottom: 3.5rem; }
+    .menu-head .section-h2 { margin-top: 0.5rem; }
+
+    .menu-grid {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      gap: 1.25rem;
+    }
+    .menu-card {
+      position: relative; overflow: hidden;
+      aspect-ratio: 3/4; cursor: pointer;
+    }
+    .menu-card img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.55s ease, filter 0.3s ease;
+      filter: brightness(0.68) saturate(0.8);
+    }
+    .menu-card:hover img {
+      transform: scale(1.06);
+      filter: brightness(0.8) saturate(1);
+    }
+    .menu-overlay {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 2.5rem 1.5rem 1.5rem;
+      background: linear-gradient(to top, rgba(18,10,6,0.96), transparent);
+    }
+    .menu-tag {
+      font-size: 0.6rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--amber);
+      margin-bottom: 0.5rem;
+    }
+    .menu-name {
+      font-family: var(--font-serif);
+      font-size: 1.2rem; color: var(--cream);
+      font-weight: normal; margin-bottom: 0.25rem;
+    }
+    .menu-desc { font-size: 0.8rem; color: var(--muted); }
+    .menu-price {
+      position: absolute; top: 1rem; right: 1rem;
+      background: var(--amber); color: var(--espresso);
+      font-size: 0.85rem; font-weight: 700;
+      padding: 0.35rem 0.7rem;
+    }
+
+    /* ── EXPERIENCE ─────────────────────────────────────── */
+    .experience {
+      padding: 7rem 0;
+      background: var(--dark-roast);
+    }
+    .experience-inner {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 6rem; align-items: center;
+    }
+    .exp-img { position: relative; }
+    .exp-img img {
+      width: 100%; aspect-ratio: 4/5; object-fit: cover;
+    }
+    .exp-caption {
+      position: absolute; bottom: -1.25rem; right: -1.25rem;
+      background: var(--amber); color: var(--espresso);
+      padding: 1.4rem 1.75rem;
+    }
+    .exp-caption-num {
+      font-family: var(--font-serif);
+      font-size: 2.25rem; line-height: 1;
+    }
+    .exp-caption-txt {
+      font-size: 0.65rem; letter-spacing: 0.12em;
+      text-transform: uppercase; margin-top: 0.25rem;
+    }
+    .exp-content { padding: 1.5rem 0 3rem; }
+    .exp-content .section-h2 { margin: 0.5rem 0 1rem; }
+
+    .exp-list { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
+    .exp-item { display: flex; gap: 1.5rem; }
+    .exp-num {
+      font-family: var(--font-serif);
+      font-size: 1.4rem; color: var(--amber);
+      line-height: 1; flex-shrink: 0; min-width: 1.75rem;
+    }
+    .exp-item h4 { font-size: 0.95rem; color: var(--cream); margin-bottom: 0.3rem; font-weight: 500; }
+    .exp-item p  { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
+
+    /* ── TESTIMONIALS ───────────────────────────────────── */
+    .testimonials { padding: 7rem 0; }
+
+    .testi-head { text-align: center; margin-bottom: 3.5rem; }
+    .testi-head .section-h2 { margin-top: 0.5rem; }
+
+    .testi-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 1.5rem;
+    }
+    .testi-card {
+      background: var(--dark-roast);
+      padding: 2.5rem 2.25rem;
+      border-top: 2px solid var(--amber);
+    }
+    .stars { margin-bottom: 1.25rem; color: var(--amber); font-size: 0.85rem; }
+    .testi-text {
+      font-family: var(--font-serif);
+      font-style: italic; font-size: 0.975rem;
+      color: var(--cream); line-height: 1.75;
+      margin-bottom: 1.5rem;
+    }
+    .testi-author { display: flex; align-items: center; gap: 1rem; }
+    .avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      overflow: hidden; background: var(--light-roast);
+    }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .author-name { font-size: 0.85rem; font-weight: 600; color: var(--cream); }
+    .author-role { font-size: 0.75rem; color: var(--muted); margin-top: 0.1rem; }
+
+    /* ── CTA ────────────────────────────────────────────── */
+    .cta-section {
+      padding: 10rem 2rem;
+      background: var(--med-roast);
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      width: 700px; height: 700px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(200,137,58,0.08), transparent 70%);
+      pointer-events: none;
+    }
+    .cta-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      font-weight: normal; line-height: 1.1;
+      color: var(--cream-dim);
+      margin: 1rem 0 1.25rem;
+    }
+    .cta-sub {
+      font-size: 1rem; color: var(--muted);
+      max-width: 480px; margin: 0 auto 3rem;
+      line-height: 1.75;
+    }
+    .cta-form {
+      display: flex; max-width: 460px; margin: 0 auto;
+    }
+    .cta-input {
+      flex: 1;
+      padding: 1rem 1.5rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-right: none;
+      color: var(--cream);
+      font-family: var(--font-sans);
+      font-size: 0.95rem; outline: none;
+      transition: border-color 0.25s;
+    }
+    .cta-input::placeholder { color: var(--muted); }
+    .cta-input:focus { border-color: var(--amber); background: rgba(255,255,255,0.09); }
+    .cta-submit {
+      padding: 1rem 1.75rem;
+      background: var(--amber);
+      border: 1px solid var(--amber);
+      color: var(--espresso);
+      font-family: var(--font-sans);
+      font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      cursor: pointer; transition: var(--ease);
+      white-space: nowrap;
+    }
+    .cta-submit:hover { background: var(--amber-light); }
+
+    /* ── FOOTER ─────────────────────────────────────────── */
+    footer {
+      background: var(--espresso);
+      padding: 5rem 2rem 2rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .footer-grid {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 4rem; padding-bottom: 4rem;
+    }
+    .footer-logo {
+      font-family: var(--font-serif);
+      font-size: 1.7rem; color: var(--cream);
+      margin-bottom: 1rem;
+    }
+    .footer-logo span { color: var(--amber); }
+    .footer-about {
+      font-size: 0.9rem; color: var(--muted);
+      line-height: 1.75; max-width: 270px;
+      margin-bottom: 2rem;
+    }
+    .socials { display: flex; gap: 0.75rem; }
+    .social {
+      width: 36px; height: 36px;
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; font-weight: 700;
+      color: var(--muted); transition: var(--ease);
+    }
+    .social:hover { border-color: var(--amber); color: var(--amber); }
+
+    .footer-col h4 {
+      font-size: 0.7rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--cream);
+      margin-bottom: 1.25rem;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; }
+    .footer-col a { font-size: 0.88rem; color: var(--muted); transition: color 0.25s; }
+    .footer-col a:hover { color: var(--amber); }
+
+    .footer-bottom {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.8rem; color: var(--muted);
+    }
+    .footer-bottom span { color: var(--amber); }
+
+    /* ── SCROLL REVEAL ──────────────────────────────────── */
+    .r {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .r.in { opacity: 1; transform: none; }
+
+    /* ── RESPONSIVE ─────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .menu-grid       { grid-template-columns: repeat(2,1fr); }
+      .footer-grid     { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links, .nav-btn { display: none; }
+      .hamburger           { display: flex; }
+
+      .hero                { grid-template-columns: 1fr; }
+      .hero-left           { padding: 7.5rem 1.75rem 3rem; min-height: 85vh; }
+      .hero-right          { height: 55vw; }
+
+      .features-head       { grid-template-columns: 1fr; gap: 1.5rem; }
+      .features-grid       { grid-template-columns: 1fr; }
+
+      .experience-inner    { grid-template-columns: 1fr; gap: 3rem; }
+      .exp-caption         { right: 0; bottom: -1rem; }
+
+      .testi-grid          { grid-template-columns: 1fr; }
+
+      .cta-form            { flex-direction: column; }
+      .cta-input           { border-right: 1px solid rgba(255,255,255,0.1); border-bottom: none; }
+
+      .footer-grid         { grid-template-columns: 1fr; gap: 2.25rem; }
+      .footer-bottom       { flex-direction: column; gap: 0.75rem; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      .menu-grid  { grid-template-columns: 1fr; }
+      .hero-stats { gap: 1.75rem; flex-wrap: wrap; }
+      .hero-actions { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ──────────────────────────────────────── -->
+  <nav id="nav">
+    <div class="nav-logo">Brew <span>&</span> Co</div>
+    <ul class="nav-links">
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#cta">Visit</a></li>
+    </ul>
+    <button class="nav-btn">Order Now</button>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ── HERO ─────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-left">
+      <p class="eyebrow">Bangkok's Finest Specialty Coffee</p>
+      <h1 class="hero-title">
+        Where Every<br>Cup Tells a<br><em>Story</em>
+      </h1>
+      <p class="hero-sub">
+        From single-origin beans sourced directly from Thai highlands to your hands —
+        we obsess over every detail so you taste the difference.
+      </p>
+      <div class="hero-actions">
+        <a href="#menu" class="btn-primary">Explore the Menu</a>
+        <a href="#experience" class="text-link">Our Story &rarr;</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">12+</div>
+          <div class="stat-lbl">Origins</div>
+        </div>
+        <div>
+          <div class="stat-num">4.9</div>
+          <div class="stat-lbl">Google Rating</div>
+        </div>
+        <div>
+          <div class="stat-num">2k+</div>
+          <div class="stat-lbl">Regulars</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <img
+        src="https://picsum.photos/seed/barista-dark-cafe/900/1100"
+        alt="Barista crafting specialty coffee at Brew &amp; Co"
+        loading="eager"
+      >
+      <div class="hero-badge">
+        <div class="hero-badge-yr">2019</div>
+        <div class="hero-badge-lbl">Est.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── MARQUEE ───────────────────────────────────── -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="marquee-item">Single Origin Espresso <span class="dot"></span></span>
+      <span class="marquee-item">Cold Brew Reserve <span class="dot"></span></span>
+      <span class="marquee-item">Hand-Poured V60 <span class="dot"></span></span>
+      <span class="marquee-item">Thai Highland Beans <span class="dot"></span></span>
+      <span class="marquee-item">Direct Trade <span class="dot"></span></span>
+      <span class="marquee-item">Seasonal Specials <span class="dot"></span></span>
+      <span class="marquee-item">In-House Roasting <span class="dot"></span></span>
+      <span class="marquee-item">Single Origin Espresso <span class="dot"></span></span>
+      <span class="marquee-item">Cold Brew Reserve <span class="dot"></span></span>
+      <span class="marquee-item">Hand-Poured V60 <span class="dot"></span></span>
+      <span class="marquee-item">Thai Highland Beans <span class="dot"></span></span>
+      <span class="marquee-item">Direct Trade <span class="dot"></span></span>
+      <span class="marquee-item">Seasonal Specials <span class="dot"></span></span>
+      <span class="marquee-item">In-House Roasting <span class="dot"></span></span>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- ── FEATURES ──────────────────────────────────── -->
+    <section class="features" id="about">
+      <div class="section-wrap">
+        <div class="features-head">
+          <div>
+            <p class="section-lbl r">Why Brew &amp; Co</p>
+            <h2 class="section-h2 r">Coffee is our craft,<br>not just our product.</h2>
+          </div>
+          <p class="section-p r">
+            We believe in the ritual — from origin to roast to pour. Every
+            decision is made with intention, because the cup in your hands
+            deserves nothing less than honesty.
+          </p>
+        </div>
+        <div class="features-grid">
+          <div class="feat-card r">
+            <svg class="feat-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M12 36c0-10 5.5-16 12-16s12 6 12 16"/>
+              <ellipse cx="24" cy="16" rx="7" ry="8"/>
+              <path d="M8 46h32"/>
+            </svg>
+            <h3 class="feat-title">Precision Roasting</h3>
+            <p class="feat-text">Each batch roasted in-house to the exact temperature profile that unlocks the origin's peak flavour — chocolatey, floral, or citrus-bright.</p>
+          </div>
+          <div class="feat-card r">
+            <svg class="feat-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <circle cx="24" cy="24" r="18"/>
+              <path d="M24 14v10l6 4"/>
+            </svg>
+            <h3 class="feat-title">Work-Friendly Hours</h3>
+            <p class="feat-text">Open 7 am–9 pm daily. High-speed Wi-Fi, abundant power outlets, calm acoustics — a space designed for deep work and quiet conversations.</p>
+          </div>
+          <div class="feat-card r">
+            <svg class="feat-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M8 38 L24 8 L40 38"/>
+              <path d="M14 28h20"/>
+            </svg>
+            <h3 class="feat-title">Source Direct</h3>
+            <p class="feat-text">We partner directly with smallholder farms in Chiang Rai, Doi Inthanon, and Nan — fair prices, full traceability, exceptional beans every time.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── MANIFESTO ──────────────────────────────────── -->
+    <section class="manifesto">
+      <blockquote class="r">
+        "Good coffee slows you down. It asks you to be present —
+        to smell, to taste, to sit for a moment with something beautiful."
+      </blockquote>
+      <p class="manifesto-attr r">— The Brew &amp; Co Philosophy</p>
+    </section>
+
+    <!-- ── MENU ───────────────────────────────────────── -->
+    <section class="menu-section" id="menu">
+      <div class="section-wrap">
+        <div class="menu-head">
+          <p class="section-lbl r">Our Offerings</p>
+          <h2 class="section-h2 r">Crafted with Purpose</h2>
+        </div>
+        <div class="menu-grid">
+          <div class="menu-card r">
+            <img src="https://picsum.photos/seed/espresso-cup-dark/600/800" alt="House Espresso" loading="lazy">
+            <div class="menu-overlay">
+              <p class="menu-tag">Signature</p>
+              <h3 class="menu-name">House Espresso</h3>
+              <p class="menu-desc">Dark chocolate &amp; caramel finish</p>
+            </div>
+            <div class="menu-price">฿90</div>
+          </div>
+          <div class="menu-card r">
+            <img src="https://picsum.photos/seed/pour-over-filter/600/800" alt="V60 Pour Over" loading="lazy">
+            <div class="menu-overlay">
+              <p class="menu-tag">Filter</p>
+              <h3 class="menu-name">V60 Pour Over</h3>
+              <p class="menu-desc">Floral &amp; bright fruit notes</p>
+            </div>
+            <div class="menu-price">฿120</div>
+          </div>
+          <div class="menu-card r">
+            <img src="https://picsum.photos/seed/cold-brew-glass/600/800" alt="48hr Cold Brew" loading="lazy">
+            <div class="menu-overlay">
+              <p class="menu-tag">Reserve</p>
+              <h3 class="menu-name">48hr Cold Brew</h3>
+              <p class="menu-desc">Smooth, low acid, ultra-clean</p>
+            </div>
+            <div class="menu-price">฿130</div>
+          </div>
+          <div class="menu-card r">
+            <img src="https://picsum.photos/seed/oat-milk-latte/600/800" alt="Oat Milk Latte" loading="lazy">
+            <div class="menu-overlay">
+              <p class="menu-tag">Classic</p>
+              <h3 class="menu-name">Oat Milk Latte</h3>
+              <p class="menu-desc">Creamy, velvety, plant-based</p>
+            </div>
+            <div class="menu-price">฿110</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── EXPERIENCE ─────────────────────────────────── -->
+    <section class="experience" id="experience">
+      <div class="section-wrap">
+        <div class="experience-inner">
+          <div class="exp-img r">
+            <img src="https://picsum.photos/seed/cafe-interior-warm/700/875" alt="Inside Brew &amp; Co" loading="lazy">
+            <div class="exp-caption">
+              <div class="exp-caption-num">5★</div>
+              <div class="exp-caption-txt">Google Rating</div>
+            </div>
+          </div>
+          <div class="exp-content">
+            <p class="section-lbl r">The Experience</p>
+            <h2 class="section-h2 r">More than a morning ritual</h2>
+            <p class="section-p r">
+              Our space is designed for focus, connection, and serendipity. Pull up a
+              bar stool and watch the espresso machine sing, or sink into a quiet corner
+              with your laptop and a long black.
+            </p>
+            <div class="exp-list">
+              <div class="exp-item r">
+                <div class="exp-num">01</div>
+                <div>
+                  <h4>Free Cupping Sessions</h4>
+                  <p>Every Saturday at 10 am — learn to taste coffee like a pro. Open to all, free of charge.</p>
+                </div>
+              </div>
+              <div class="exp-item r">
+                <div class="exp-num">02</div>
+                <div>
+                  <h4>Work-Friendly Atmosphere</h4>
+                  <p>Zero pretension. Abundant sockets, fast Wi-Fi, calm playlists — your second office.</p>
+                </div>
+              </div>
+              <div class="exp-item r">
+                <div class="exp-num">03</div>
+                <div>
+                  <h4>Seasonal Origin Menu</h4>
+                  <p>Every quarter we rotate the menu around a new origin story — told through flavour.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TESTIMONIALS ───────────────────────────────── -->
+    <section class="testimonials">
+      <div class="section-wrap">
+        <div class="testi-head">
+          <p class="section-lbl r">Community Love</p>
+          <h2 class="section-h2 r">What Regulars Say</h2>
+        </div>
+        <div class="testi-grid">
+          <div class="testi-card r">
+            <div class="stars">★★★★★</div>
+            <p class="testi-text">"Brew &amp; Co changed how I think about coffee. The V60 here tastes like nothing else in Bangkok — bright, clean, and absolutely alive."</p>
+            <div class="testi-author">
+              <div class="avatar">
+                <img src="https://picsum.photos/seed/portrait-f-napat/80/80" alt="" loading="lazy">
+              </div>
+              <div>
+                <div class="author-name">Napat Srisuk</div>
+                <div class="author-role">UX Designer · Regular since 2021</div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card r">
+            <div class="stars">★★★★★</div>
+            <p class="testi-text">"I've worked from here every Wednesday for two years. The space is calm, the coffee exceptional, and the team knows my order by heart."</p>
+            <div class="testi-author">
+              <div class="avatar">
+                <img src="https://picsum.photos/seed/portrait-m-thanit/80/80" alt="" loading="lazy">
+              </div>
+              <div>
+                <div class="author-name">Thanit Charoenwong</div>
+                <div class="author-role">Software Engineer · Freelancer</div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card r">
+            <div class="stars">★★★★★</div>
+            <p class="testi-text">"The Saturday cupping sessions are incredible. I brought three friends last month and now we're all obsessed. This community is something special."</p>
+            <div class="testi-author">
+              <div class="avatar">
+                <img src="https://picsum.photos/seed/portrait-f-ploy/80/80" alt="" loading="lazy">
+              </div>
+              <div>
+                <div class="author-name">Ploy Rattanaporn</div>
+                <div class="author-role">Marketing Director · Weekly regular</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CTA ────────────────────────────────────────── -->
+    <section class="cta-section" id="cta">
+      <p class="section-lbl r">Stay Connected</p>
+      <h2 class="cta-title r">First to know.<br>First in line.</h2>
+      <p class="cta-sub r">
+        Seasonal menus, event invites, and the occasional brewing tip — straight
+        to your inbox. No noise. Just coffee.
+      </p>
+      <form class="cta-form r" id="cta-form" novalidate>
+        <input
+          class="cta-input" type="email"
+          placeholder="your@email.com" required
+          aria-label="Email address"
+        >
+        <button class="cta-submit" type="submit">Subscribe</button>
+      </form>
+    </section>
+
+  </main>
+
+  <!-- ── FOOTER ────────────────────────────────────── -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Brew <span>&</span> Co</div>
+        <p class="footer-about">
+          Specialty coffee roasters and café in the heart of Bangkok.
+          Sourced with care, roasted with precision, served with warmth.
+        </p>
+        <div class="socials">
+          <a href="#" class="social" aria-label="Instagram">IG</a>
+          <a href="#" class="social" aria-label="Facebook">FB</a>
+          <a href="#" class="social" aria-label="LINE">LN</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Menu</h4>
+        <ul>
+          <li><a href="#">Espresso Bar</a></li>
+          <li><a href="#">Filter Coffee</a></li>
+          <li><a href="#">Cold Brew</a></li>
+          <li><a href="#">Seasonal Menu</a></li>
+          <li><a href="#">Beans to Buy</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Community</h4>
+        <ul>
+          <li><a href="#">Cupping Events</a></li>
+          <li><a href="#">Brewing Workshops</a></li>
+          <li><a href="#">Private Hire</a></li>
+          <li><a href="#">Wholesale</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Visit Us</h4>
+        <ul>
+          <li><a href="#">42 Sukhumvit Soi 23</a></li>
+          <li><a href="#">Watthana, Bangkok</a></li>
+          <li><a href="#">Mon–Fri 7am–9pm</a></li>
+          <li><a href="#">Sat–Sun 8am–8pm</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 <span>Brew &amp; Co</span>. All rights reserved.</span>
+      <span>Roasted &amp; served in Bangkok, Thailand.</span>
+    </div>
+  </footer>
+
+  <!-- ── JS ─────────────────────────────────────────── -->
+  <script>
+    // Nav: add .scrolled class on scroll
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 70);
+    }, { passive: true });
+
+    // Scroll reveal via IntersectionObserver
+    const reveals = document.querySelectorAll('.r');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -55px 0px' });
+
+    // Staggered delays for grid children
+    document.querySelectorAll(
+      '.features-grid .feat-card, .menu-grid .menu-card, .testi-grid .testi-card, .exp-list .exp-item'
+    ).forEach((el, i) => {
+      el.style.transitionDelay = `${(i % 4) * 90}ms`;
+    });
+
+    reveals.forEach(el => observer.observe(el));
+
+    // Newsletter form
+    const form = document.getElementById('cta-form');
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const btn   = form.querySelector('button');
+      const input = form.querySelector('input');
+      btn.textContent = 'You\'re in!';
+      btn.style.cssText = 'background:#4a7c59;border-color:#4a7c59;';
+      input.value = '';
+      setTimeout(() => {
+        btn.textContent = 'Subscribe';
+        btn.style.cssText = '';
+      }, 3500);
+    });
+  </script>
+
+</body>
+</html>

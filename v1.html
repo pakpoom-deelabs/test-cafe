@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brew & Co — Specialty Coffee</title>
+  <style>
+    /* =============================================
+       DESIGN TOKENS
+       Variant 1: Warm Editorial Minimal
+       Palette: Espresso + Cream + Amber
+    ============================================= */
+    :root {
+      --c-espresso:   #1E110A;
+      --c-brown:      #3D2314;
+      --c-amber:      #C47B2B;
+      --c-amber-lt:   #E8A84C;
+      --c-cream:      #F7F2EB;
+      --c-cream-dk:   #EDE5D8;
+      --c-warm-gray:  #8A7B6E;
+      --c-white:      #FDFAF6;
+
+      --ff-display:   Georgia, 'Times New Roman', serif;
+      --ff-body:      -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+
+      --fs-xs:   0.75rem;
+      --fs-sm:   0.875rem;
+      --fs-base: 1rem;
+      --fs-md:   1.125rem;
+      --fs-lg:   1.375rem;
+      --fs-xl:   1.75rem;
+      --fs-2xl:  2.25rem;
+      --fs-3xl:  3rem;
+      --fs-4xl:  4rem;
+      --fs-5xl:  5.5rem;
+
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+      --space-20: 5rem;
+      --space-24: 6rem;
+      --space-32: 8rem;
+
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-full: 9999px;
+
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: var(--ff-body);
+      background-color: var(--c-cream);
+      color: var(--c-espresso);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img { display: block; max-width: 100%; height: auto; }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+
+    /* =============================================
+       TYPOGRAPHY HELPERS
+    ============================================= */
+    .eyebrow {
+      font-family: var(--ff-body);
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--c-amber);
+    }
+
+    .display-xl {
+      font-family: var(--ff-display);
+      font-size: clamp(var(--fs-3xl), 8vw, var(--fs-5xl));
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+
+    .display-lg {
+      font-family: var(--ff-display);
+      font-size: clamp(var(--fs-2xl), 5vw, var(--fs-4xl));
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .display-md {
+      font-family: var(--ff-display);
+      font-size: clamp(var(--fs-xl), 3vw, var(--fs-3xl));
+      font-weight: 400;
+      line-height: 1.2;
+    }
+
+    .body-lg {
+      font-size: var(--fs-md);
+      line-height: 1.7;
+      color: var(--c-warm-gray);
+    }
+
+    /* =============================================
+       LAYOUT UTILITIES
+    ============================================= */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+    }
+
+    .container--narrow {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+    }
+
+    /* =============================================
+       NAV
+    ============================================= */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: var(--space-4) 0;
+      transition: background var(--transition), box-shadow var(--transition);
+    }
+
+    .nav.scrolled {
+      background: rgba(247, 242, 235, 0.95);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 rgba(30, 17, 10, 0.08);
+    }
+
+    .nav__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav__logo {
+      font-family: var(--ff-display);
+      font-size: var(--fs-xl);
+      font-weight: 400;
+      color: var(--c-white);
+      letter-spacing: -0.01em;
+      transition: color var(--transition);
+    }
+
+    .nav.scrolled .nav__logo { color: var(--c-espresso); }
+
+    .nav__logo span {
+      color: var(--c-amber-lt);
+    }
+    .nav.scrolled .nav__logo span { color: var(--c-amber); }
+
+    .nav__links {
+      display: flex;
+      gap: var(--space-8);
+      align-items: center;
+    }
+
+    .nav__links a {
+      font-size: var(--fs-sm);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: rgba(253, 250, 246, 0.85);
+      transition: color var(--transition);
+    }
+
+    .nav.scrolled .nav__links a { color: var(--c-warm-gray); }
+    .nav__links a:hover { color: var(--c-amber-lt); }
+    .nav.scrolled .nav__links a:hover { color: var(--c-amber); }
+
+    .nav__cta {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 0.55rem var(--space-6);
+      border: 1.5px solid rgba(253, 250, 246, 0.5);
+      border-radius: var(--radius-full);
+      font-size: var(--fs-sm);
+      font-weight: 500;
+      color: var(--c-white) !important;
+      transition: background var(--transition), border-color var(--transition), color var(--transition) !important;
+    }
+
+    .nav.scrolled .nav__cta {
+      border-color: var(--c-amber);
+      color: var(--c-amber) !important;
+    }
+
+    .nav__cta:hover {
+      background: rgba(253, 250, 246, 0.12) !important;
+    }
+
+    .nav.scrolled .nav__cta:hover {
+      background: var(--c-amber) !important;
+      color: var(--c-white) !important;
+    }
+
+    .nav__hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: var(--space-2);
+      background: none;
+      border: none;
+    }
+
+    .nav__hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--c-white);
+      border-radius: 2px;
+      transition: background var(--transition);
+    }
+
+    .nav.scrolled .nav__hamburger span { background: var(--c-espresso); }
+
+    /* =============================================
+       HERO — Full bleed, dark overlay, centered
+    ============================================= */
+    .hero {
+      position: relative;
+      height: 100svh;
+      min-height: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero__bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://picsum.photos/seed/specialty-coffee-brew/1600/1000');
+      background-size: cover;
+      background-position: center 40%;
+      transform: scale(1.04);
+      transition: transform 8s ease-out;
+    }
+
+    .hero__bg.loaded { transform: scale(1); }
+
+    .hero__overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(20, 10, 4, 0.35) 0%,
+        rgba(20, 10, 4, 0.55) 50%,
+        rgba(20, 10, 4, 0.75) 100%
+      );
+    }
+
+    .hero__content {
+      position: relative;
+      z-index: 2;
+      padding: 0 var(--space-6);
+      max-width: 860px;
+    }
+
+    .hero__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--c-amber-lt);
+      margin-bottom: var(--space-6);
+    }
+
+    .hero__eyebrow::before,
+    .hero__eyebrow::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: var(--c-amber-lt);
+    }
+
+    .hero__title {
+      font-family: var(--ff-display);
+      font-size: clamp(2.8rem, 9vw, 6.5rem);
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: -0.025em;
+      color: var(--c-white);
+      margin-bottom: var(--space-6);
+    }
+
+    .hero__title em {
+      font-style: italic;
+      color: var(--c-amber-lt);
+    }
+
+    .hero__subtitle {
+      font-size: clamp(var(--fs-base), 2.5vw, var(--fs-lg));
+      color: rgba(253, 250, 246, 0.78);
+      max-width: 520px;
+      margin: 0 auto var(--space-10);
+      line-height: 1.65;
+    }
+
+    .hero__actions {
+      display: flex;
+      gap: var(--space-4);
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: var(--space-10);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 0.85rem 2rem;
+      border-radius: var(--radius-full);
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: all var(--transition);
+      white-space: nowrap;
+      border: none;
+    }
+
+    .btn--primary {
+      background: var(--c-amber);
+      color: var(--c-white);
+    }
+
+    .btn--primary:hover {
+      background: var(--c-amber-lt);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(196, 123, 43, 0.4);
+    }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--c-white);
+      border: 1.5px solid rgba(253, 250, 246, 0.45);
+    }
+
+    .btn--ghost:hover {
+      background: rgba(253, 250, 246, 0.1);
+      border-color: rgba(253, 250, 246, 0.7);
+    }
+
+    .hero__scroll {
+      position: absolute;
+      bottom: var(--space-8);
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2);
+      color: rgba(253, 250, 246, 0.5);
+      font-size: var(--fs-xs);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      animation: bounce 2.5s ease-in-out infinite;
+    }
+
+    .hero__scroll svg { opacity: 0.6; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* =============================================
+       TICKER STRIP
+    ============================================= */
+    .ticker {
+      background: var(--c-espresso);
+      color: var(--c-amber-lt);
+      padding: var(--space-3) 0;
+      overflow: hidden;
+    }
+
+    .ticker__track {
+      display: flex;
+      gap: 0;
+      white-space: nowrap;
+      animation: ticker 28s linear infinite;
+    }
+
+    .ticker__item {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-4);
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding-right: var(--space-12);
+      flex-shrink: 0;
+    }
+
+    .ticker__dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--c-amber);
+      flex-shrink: 0;
+    }
+
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* =============================================
+       INTRO / PHILOSOPHY
+    ============================================= */
+    .intro {
+      padding: var(--space-32) 0 var(--space-24);
+    }
+
+    .intro__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-16);
+      align-items: center;
+    }
+
+    .intro__text .eyebrow { margin-bottom: var(--space-4); }
+
+    .intro__heading {
+      margin-bottom: var(--space-6);
+    }
+
+    .intro__body {
+      font-size: var(--fs-md);
+      line-height: 1.75;
+      color: var(--c-warm-gray);
+      margin-bottom: var(--space-8);
+    }
+
+    .intro__signature {
+      font-family: var(--ff-display);
+      font-size: var(--fs-2xl);
+      font-style: italic;
+      color: var(--c-amber);
+      letter-spacing: -0.01em;
+    }
+
+    .intro__image-wrap {
+      position: relative;
+    }
+
+    .intro__image {
+      width: 100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      border-radius: var(--radius-md);
+    }
+
+    .intro__badge {
+      position: absolute;
+      bottom: -var(--space-8);
+      left: -var(--space-8);
+      width: 120px;
+      height: 120px;
+      background: var(--c-amber);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--c-white);
+      bottom: var(--space-8);
+      left: calc(-1 * var(--space-8));
+      box-shadow: 0 8px 32px rgba(196, 123, 43, 0.35);
+    }
+
+    .intro__badge-num {
+      font-family: var(--ff-display);
+      font-size: var(--fs-2xl);
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .intro__badge-label {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 2px;
+      line-height: 1.3;
+      max-width: 70px;
+    }
+
+    /* =============================================
+       STATS
+    ============================================= */
+    .stats {
+      background: var(--c-espresso);
+      padding: var(--space-16) 0;
+    }
+
+    .stats__grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-8);
+      text-align: center;
+    }
+
+    .stat__number {
+      font-family: var(--ff-display);
+      font-size: clamp(var(--fs-2xl), 4vw, var(--fs-4xl));
+      font-weight: 400;
+      color: var(--c-amber-lt);
+      line-height: 1;
+      margin-bottom: var(--space-2);
+    }
+
+    .stat__label {
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(253, 250, 246, 0.5);
+    }
+
+    .stats__divider {
+      width: 1px;
+      background: rgba(253, 250, 246, 0.1);
+      align-self: stretch;
+      display: none;
+    }
+
+    /* =============================================
+       MENU / DRINKS
+    ============================================= */
+    .menu {
+      padding: var(--space-32) 0;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: var(--space-16);
+    }
+
+    .section-header .eyebrow { margin-bottom: var(--space-4); }
+
+    .section-header__title {
+      margin-bottom: var(--space-4);
+    }
+
+    .section-header__sub {
+      font-size: var(--fs-md);
+      color: var(--c-warm-gray);
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .menu__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-6);
+    }
+
+    .menu-card {
+      background: var(--c-white);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: transform var(--transition), box-shadow var(--transition);
+      cursor: default;
+    }
+
+    .menu-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 48px rgba(30, 17, 10, 0.12);
+    }
+
+    .menu-card__img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+    }
+
+    .menu-card__body {
+      padding: var(--space-6);
+    }
+
+    .menu-card__tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--c-amber);
+      background: rgba(196, 123, 43, 0.1);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      margin-bottom: var(--space-3);
+    }
+
+    .menu-card__name {
+      font-family: var(--ff-display);
+      font-size: var(--fs-xl);
+      font-weight: 400;
+      color: var(--c-espresso);
+      margin-bottom: var(--space-2);
+    }
+
+    .menu-card__desc {
+      font-size: var(--fs-sm);
+      color: var(--c-warm-gray);
+      line-height: 1.65;
+      margin-bottom: var(--space-4);
+    }
+
+    .menu-card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--c-cream-dk);
+    }
+
+    .menu-card__price {
+      font-family: var(--ff-display);
+      font-size: var(--fs-lg);
+      font-weight: 400;
+      color: var(--c-espresso);
+    }
+
+    .menu-card__origin {
+      font-size: var(--fs-xs);
+      color: var(--c-warm-gray);
+      letter-spacing: 0.06em;
+    }
+
+    /* =============================================
+       EXPERIENCE — Split layout
+    ============================================= */
+    .experience {
+      padding: var(--space-32) 0;
+      background: var(--c-cream-dk);
+    }
+
+    .experience__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(30, 17, 10, 0.14);
+    }
+
+    .experience__media {
+      position: relative;
+      min-height: 560px;
+    }
+
+    .experience__img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .experience__content {
+      background: var(--c-espresso);
+      padding: var(--space-16) var(--space-12);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .experience__content .eyebrow {
+      margin-bottom: var(--space-4);
+      color: var(--c-amber-lt);
+    }
+
+    .experience__title {
+      color: var(--c-white);
+      margin-bottom: var(--space-6);
+    }
+
+    .experience__body {
+      font-size: var(--fs-base);
+      line-height: 1.75;
+      color: rgba(253, 250, 246, 0.65);
+      margin-bottom: var(--space-10);
+    }
+
+    .features {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+    }
+
+    .feature {
+      display: flex;
+      gap: var(--space-4);
+      align-items: flex-start;
+    }
+
+    .feature__icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      background: rgba(196, 123, 43, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--c-amber-lt);
+    }
+
+    .feature__text strong {
+      display: block;
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--c-white);
+      margin-bottom: 2px;
+    }
+
+    .feature__text span {
+      font-size: var(--fs-sm);
+      color: rgba(253, 250, 246, 0.5);
+      line-height: 1.5;
+    }
+
+    /* =============================================
+       TESTIMONIALS
+    ============================================= */
+    .testimonials {
+      padding: var(--space-32) 0;
+    }
+
+    .testimonials__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-6);
+      margin-top: var(--space-16);
+    }
+
+    .testimonial-card {
+      padding: var(--space-8);
+      background: var(--c-white);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--c-cream-dk);
+    }
+
+    .testimonial-card__stars {
+      display: flex;
+      gap: 3px;
+      margin-bottom: var(--space-4);
+      color: var(--c-amber);
+    }
+
+    .testimonial-card__quote {
+      font-family: var(--ff-display);
+      font-size: var(--fs-lg);
+      font-style: italic;
+      line-height: 1.55;
+      color: var(--c-espresso);
+      margin-bottom: var(--space-6);
+    }
+
+    .testimonial-card__author {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .testimonial-card__avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--c-cream-dk);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .testimonial-card__avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .testimonial-card__name {
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--c-espresso);
+      line-height: 1.2;
+    }
+
+    .testimonial-card__role {
+      font-size: var(--fs-xs);
+      color: var(--c-warm-gray);
+    }
+
+    /* =============================================
+       VISIT / CTA
+    ============================================= */
+    .visit {
+      padding: var(--space-32) 0;
+      background: var(--c-espresso);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .visit::before {
+      content: 'B&CO';
+      position: absolute;
+      font-family: var(--ff-display);
+      font-size: 22vw;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.03);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      pointer-events: none;
+      letter-spacing: -0.05em;
+    }
+
+    .visit__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-16);
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .visit__text .eyebrow { color: var(--c-amber-lt); margin-bottom: var(--space-4); }
+
+    .visit__title {
+      color: var(--c-white);
+      margin-bottom: var(--space-6);
+    }
+
+    .visit__body {
+      font-size: var(--fs-md);
+      line-height: 1.7;
+      color: rgba(253, 250, 246, 0.6);
+      margin-bottom: var(--space-8);
+    }
+
+    .visit__actions {
+      display: flex;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+    }
+
+    .btn--amber {
+      background: var(--c-amber);
+      color: var(--c-white);
+    }
+
+    .btn--amber:hover {
+      background: var(--c-amber-lt);
+      transform: translateY(-1px);
+    }
+
+    .btn--outline-white {
+      background: transparent;
+      color: var(--c-white);
+      border: 1.5px solid rgba(253, 250, 246, 0.3);
+    }
+
+    .btn--outline-white:hover {
+      border-color: rgba(253, 250, 246, 0.6);
+      background: rgba(253, 250, 246, 0.06);
+    }
+
+    .hours-card {
+      background: rgba(253, 250, 246, 0.05);
+      border: 1px solid rgba(253, 250, 246, 0.1);
+      border-radius: var(--radius-md);
+      padding: var(--space-8);
+    }
+
+    .hours-card__title {
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--c-amber-lt);
+      margin-bottom: var(--space-6);
+    }
+
+    .hours-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid rgba(253, 250, 246, 0.06);
+      font-size: var(--fs-sm);
+    }
+
+    .hours-row:last-child { border-bottom: none; }
+
+    .hours-row__day { color: rgba(253, 250, 246, 0.5); }
+    .hours-row__time { color: var(--c-white); font-weight: 500; }
+
+    .hours-card__address {
+      margin-top: var(--space-6);
+      padding-top: var(--space-6);
+      border-top: 1px solid rgba(253, 250, 246, 0.1);
+      font-size: var(--fs-sm);
+      color: rgba(253, 250, 246, 0.5);
+      line-height: 1.65;
+    }
+
+    .hours-card__address strong {
+      display: block;
+      color: var(--c-white);
+      margin-bottom: var(--space-1);
+      font-size: var(--fs-base);
+    }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    .footer {
+      background: #120B05;
+      padding: var(--space-16) 0 var(--space-8);
+    }
+
+    .footer__top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: var(--space-12);
+      padding-bottom: var(--space-12);
+      border-bottom: 1px solid rgba(253, 250, 246, 0.08);
+      margin-bottom: var(--space-8);
+    }
+
+    .footer__brand-logo {
+      font-family: var(--ff-display);
+      font-size: var(--fs-2xl);
+      color: var(--c-white);
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-4);
+    }
+
+    .footer__brand-logo span { color: var(--c-amber); }
+
+    .footer__tagline {
+      font-size: var(--fs-sm);
+      color: rgba(253, 250, 246, 0.4);
+      line-height: 1.65;
+      margin-bottom: var(--space-6);
+    }
+
+    .footer__social {
+      display: flex;
+      gap: var(--space-3);
+    }
+
+    .footer__social-link {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: rgba(253, 250, 246, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(253, 250, 246, 0.4);
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .footer__social-link:hover {
+      background: var(--c-amber);
+      color: var(--c-white);
+    }
+
+    .footer__col-title {
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(253, 250, 246, 0.35);
+      margin-bottom: var(--space-5);
+    }
+
+    .footer__links {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .footer__links a {
+      font-size: var(--fs-sm);
+      color: rgba(253, 250, 246, 0.55);
+      transition: color var(--transition);
+    }
+
+    .footer__links a:hover { color: var(--c-amber-lt); }
+
+    .footer__bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: var(--fs-xs);
+      color: rgba(253, 250, 246, 0.25);
+    }
+
+    /* =============================================
+       MOBILE NAV OVERLAY
+    ============================================= */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 99;
+      background: var(--c-espresso);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-8);
+      padding: var(--space-16);
+    }
+
+    .mobile-nav.open { display: flex; }
+
+    .mobile-nav a {
+      font-family: var(--ff-display);
+      font-size: var(--fs-3xl);
+      color: var(--c-white);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      transition: color var(--transition);
+    }
+
+    .mobile-nav a:hover { color: var(--c-amber-lt); }
+
+    .mobile-nav__close {
+      position: absolute;
+      top: var(--space-6);
+      right: var(--space-6);
+      background: none;
+      border: none;
+      color: rgba(253, 250, 246, 0.6);
+      cursor: pointer;
+      font-size: var(--fs-2xl);
+      line-height: 1;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 768px) {
+      .nav__links { display: none; }
+      .nav__hamburger { display: flex; }
+
+      .intro__grid { grid-template-columns: 1fr; gap: var(--space-12); }
+      .intro__image-wrap { order: -1; }
+      .intro__badge {
+        width: 96px;
+        height: 96px;
+        bottom: var(--space-4);
+        left: var(--space-4);
+      }
+
+      .stats__grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-6) var(--space-8); }
+
+      .menu__grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+
+      .experience__grid { grid-template-columns: 1fr; }
+      .experience__media { min-height: 300px; }
+      .experience__content { padding: var(--space-10) var(--space-8); }
+
+      .testimonials__grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+
+      .visit__grid { grid-template-columns: 1fr; }
+
+      .footer__top {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-8);
+      }
+
+      .footer__brand { grid-column: 1 / -1; }
+
+      .footer__bottom {
+        flex-direction: column;
+        gap: var(--space-3);
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero__actions { flex-direction: column; align-items: center; }
+      .visit__actions { flex-direction: column; }
+      .stats__grid { grid-template-columns: repeat(2, 1fr); }
+      .footer__top { grid-template-columns: 1fr; }
+    }
+
+    /* =============================================
+       SCROLL REVEAL
+    ============================================= */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== NAV ==================== -->
+  <nav class="nav" id="mainNav" role="navigation" aria-label="Main navigation">
+    <div class="container">
+      <div class="nav__inner">
+        <a href="#" class="nav__logo" aria-label="Brew & Co home">Brew <span>&</span> Co</a>
+
+        <ul class="nav__links" role="list">
+          <li><a href="#menu">Menu</a></li>
+          <li><a href="#experience">Our Story</a></li>
+          <li><a href="#visit">Visit</a></li>
+          <li><a href="#visit" class="nav__cta">Order Now</a></li>
+        </ul>
+
+        <button class="nav__hamburger" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Nav -->
+  <div class="mobile-nav" id="mobileNav" role="dialog" aria-label="Mobile navigation">
+    <button class="mobile-nav__close" id="menuClose" aria-label="Close menu">✕</button>
+    <a href="#menu" onclick="closeMobileNav()">Menu</a>
+    <a href="#experience" onclick="closeMobileNav()">Our Story</a>
+    <a href="#visit" onclick="closeMobileNav()">Visit</a>
+    <a href="#visit" class="btn btn--amber" onclick="closeMobileNav()" style="margin-top:1rem;font-family:var(--ff-body);font-size:1rem;">Order Now</a>
+  </div>
+
+  <main>
+    <!-- ==================== HERO ==================== -->
+    <section class="hero" aria-labelledby="heroTitle">
+      <div class="hero__bg" id="heroBg"></div>
+      <div class="hero__overlay" aria-hidden="true"></div>
+
+      <div class="hero__content">
+        <p class="hero__eyebrow" aria-hidden="true">Specialty Coffee</p>
+        <h1 class="hero__title" id="heroTitle">
+          Where Every Cup<br>
+          Tells a <em>Story</em>
+        </h1>
+        <p class="hero__subtitle">
+          Single-origin beans, crafted with intention. Brew & Co is your neighborhood's home for specialty coffee and genuine community.
+        </p>
+        <div class="hero__actions">
+          <a href="#menu" class="btn btn--primary">Explore the Menu</a>
+          <a href="#experience" class="btn btn--ghost">Our Philosophy</a>
+        </div>
+      </div>
+
+      <div class="hero__scroll" aria-hidden="true">
+        <svg width="16" height="24" viewBox="0 0 16 24" fill="none">
+          <rect x="1" y="1" width="14" height="22" rx="7" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="8" cy="8" r="2" fill="currentColor">
+            <animateMotion path="M0,0 L0,8" dur="1.5s" repeatCount="indefinite"/>
+          </circle>
+        </svg>
+        Scroll
+      </div>
+    </section>
+
+    <!-- ==================== TICKER ==================== -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker__track" id="tickerTrack">
+        <!-- Duplicated for seamless loop -->
+        <span class="ticker__item"><span class="ticker__dot"></span>Single Origin Beans</span>
+        <span class="ticker__item"><span class="ticker__dot"></span>Hand-roasted Weekly</span>
+        <span class="ticker__item"><span class="ticker__dot"></span>Ethically Sourced</span>
+        <span class="ticker__item"><span class="ticker__dot"></span>Barista Champions</span>
+        <span class="ticker__item"><span class="ticker__dot"></span>Community First</span>
+        <span class="ticker__item"><span class="ticker__dot"></span>Open 7 Days a Week</span>
+        <span class="ticker__item"><span class="ticker__dot"></span>Specialty Grade Only</span>
+        <span class="ticker__item"><span class="ticker__dot"></span>Seasonal Blends</span>
+        <span class="ticker__item"><span class="ticker__dot"></span>Single Origin Beans</span>
+        <span class="ticker__item"><span class="ticker__dot"></span>Hand-roasted Weekly</span>
+        <span class="ticker__item"><span class="ticker__dot"></span>Ethically Sourced</span>
+        <span class="ticker__item"><span class="ticker__dot"></span>Barista Champions</span>
+        <span class="ticker__item"><span class="ticker__dot"></span>Community First</span>
+        <span class="ticker__item"><span class="ticker__dot"></span>Open 7 Days a Week</span>
+        <span class="ticker__item"><span class="ticker__dot"></span>Specialty Grade Only</span>
+        <span class="ticker__item"><span class="ticker__dot"></span>Seasonal Blends</span>
+      </div>
+    </div>
+
+    <!-- ==================== INTRO ==================== -->
+    <section class="intro" aria-labelledby="introTitle">
+      <div class="container">
+        <div class="intro__grid">
+          <div class="intro__text reveal">
+            <p class="eyebrow">Our Philosophy</p>
+            <h2 class="display-lg intro__heading" id="introTitle">
+              Coffee is a craft,<br>not a commodity.
+            </h2>
+            <p class="intro__body">
+              We believe the best cup starts long before it reaches your hands. From the farmers in Ethiopia's Yirgacheffe valleys to our roasters in Bangkok, every decision is made with care and respect for the bean's natural character.
+            </p>
+            <p class="intro__body">
+              Brew & Co was born from a simple conviction: young professionals deserve a space that doesn't compromise on quality or warmth. A place to slow down, connect, and drink something genuinely extraordinary.
+            </p>
+            <p class="intro__signature">— Brew &amp; Co, est. 2019</p>
+          </div>
+
+          <div class="intro__image-wrap reveal reveal-delay-2">
+            <img
+              class="intro__image"
+              src="https://picsum.photos/seed/barista-craft-coffee/600/750"
+              alt="Barista crafting a specialty espresso at Brew & Co"
+              width="600"
+              height="750"
+              loading="lazy"
+            >
+            <div class="intro__badge" aria-label="Specialty grade 90+ score">
+              <span class="intro__badge-num">90+</span>
+              <span class="intro__badge-label">SCA Score</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== STATS ==================== -->
+    <div class="stats" aria-label="Brew & Co by the numbers">
+      <div class="container">
+        <dl class="stats__grid">
+          <div class="stat reveal">
+            <dt class="stat__label">Happy Regulars</dt>
+            <dd class="stat__number">12,000+</dd>
+          </div>
+          <div class="stat reveal reveal-delay-1">
+            <dt class="stat__label">Origins Sourced</dt>
+            <dd class="stat__number">24</dd>
+          </div>
+          <div class="stat reveal reveal-delay-2">
+            <dt class="stat__label">Cups Brewed Daily</dt>
+            <dd class="stat__number">800</dd>
+          </div>
+          <div class="stat reveal reveal-delay-3">
+            <dt class="stat__label">Years Roasting</dt>
+            <dd class="stat__number">6</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <!-- ==================== MENU ==================== -->
+    <section class="menu" id="menu" aria-labelledby="menuTitle">
+      <div class="container">
+        <header class="section-header">
+          <p class="eyebrow">Signature Offerings</p>
+          <h2 class="display-lg section-header__title" id="menuTitle">The Menu</h2>
+          <p class="section-header__sub">Meticulously crafted drinks that showcase the natural complexity of exceptional beans.</p>
+        </header>
+
+        <div class="menu__grid">
+          <article class="menu-card reveal">
+            <img
+              class="menu-card__img"
+              src="https://picsum.photos/seed/espresso-pour-coffee/480/360"
+              alt="Espresso Classico"
+              width="480"
+              height="360"
+              loading="lazy"
+            >
+            <div class="menu-card__body">
+              <span class="menu-card__tag">Espresso</span>
+              <h3 class="menu-card__name">Classico</h3>
+              <p class="menu-card__desc">Our house espresso blend — bright cherry acidity, dark chocolate finish, and a crema that lasts. The foundation of everything we do.</p>
+              <div class="menu-card__footer">
+                <span class="menu-card__price">฿75</span>
+                <span class="menu-card__origin">Brazil · Colombia</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="menu-card reveal reveal-delay-1">
+            <img
+              class="menu-card__img"
+              src="https://picsum.photos/seed/latte-art-warm/480/360"
+              alt="Single Origin Pour Over"
+              width="480"
+              height="360"
+              loading="lazy"
+            >
+            <div class="menu-card__body">
+              <span class="menu-card__tag">Pour Over</span>
+              <h3 class="menu-card__name">Yirgacheffe Natural</h3>
+              <p class="menu-card__desc">Wild blueberry, jasmine, and a lingering sweetness that stops conversations. Brewed to order on a Kalita Wave for full clarity.</p>
+              <div class="menu-card__footer">
+                <span class="menu-card__price">฿140</span>
+                <span class="menu-card__origin">Ethiopia</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="menu-card reveal reveal-delay-2">
+            <img
+              class="menu-card__img"
+              src="https://picsum.photos/seed/cold-brew-glass/480/360"
+              alt="Signature Cold Brew"
+              width="480"
+              height="360"
+              loading="lazy"
+            >
+            <div class="menu-card__body">
+              <span class="menu-card__tag">Cold Brew</span>
+              <h3 class="menu-card__name">24-Hour Dark &amp; Silky</h3>
+              <p class="menu-card__desc">Steeped for a full day in cold filtered water. Intensely smooth, low acidity, naturally sweet. A glass you'll schedule your mornings around.</p>
+              <div class="menu-card__footer">
+                <span class="menu-card__price">฿120</span>
+                <span class="menu-card__origin">Guatemala · Sumatra</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== EXPERIENCE ==================== -->
+    <section class="experience" id="experience" aria-labelledby="expTitle">
+      <div class="container">
+        <div class="experience__grid reveal">
+          <div class="experience__media">
+            <img
+              class="experience__img"
+              src="https://picsum.photos/seed/warm-cafe-interior/800/700"
+              alt="Inside Brew & Co — warm wood tones, focused patrons, soft light"
+              width="800"
+              height="700"
+              loading="lazy"
+            >
+          </div>
+
+          <div class="experience__content">
+            <p class="eyebrow">The Space</p>
+            <h2 class="display-md experience__title" id="expTitle">
+              Designed for makers, thinkers, and morning people.
+            </h2>
+            <p class="experience__body">
+              The moment you walk in, you'll feel it — a deliberate warmth built into every detail. Reclaimed timber counters, natural light, and the sound of a grinder at full tilt. This is your third place.
+            </p>
+
+            <div class="features">
+              <div class="feature">
+                <div class="feature__icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>
+                  </svg>
+                </div>
+                <div class="feature__text">
+                  <strong>Brewing Bar Access</strong>
+                  <span>Watch your pour-over made from start to finish. Ask questions — we love them.</span>
+                </div>
+              </div>
+              <div class="feature">
+                <div class="feature__icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+                  </svg>
+                </div>
+                <div class="feature__text">
+                  <strong>Fast, Free Wi-Fi</strong>
+                  <span>Reliable enough for your next product launch. Power outlets at every seat.</span>
+                </div>
+              </div>
+              <div class="feature">
+                <div class="feature__icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                </div>
+                <div class="feature__text">
+                  <strong>Community Events</strong>
+                  <span>Cupping sessions, barista talks, and workshops every month. No RSVP needed.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TESTIMONIALS ==================== -->
+    <section class="testimonials" aria-labelledby="reviewsTitle">
+      <div class="container">
+        <header class="section-header">
+          <p class="eyebrow">Community Love</p>
+          <h2 class="display-lg section-header__title" id="reviewsTitle">What regulars say</h2>
+        </header>
+
+        <div class="testimonials__grid">
+          <article class="testimonial-card reveal">
+            <div class="testimonial-card__stars" aria-label="5 out of 5 stars">
+              ★★★★★
+            </div>
+            <blockquote class="testimonial-card__quote">
+              "I've been to specialty cafés across four continents. Brew & Co's Yirgacheffe pour-over is genuinely one of the best cups I've had anywhere."
+            </blockquote>
+            <div class="testimonial-card__author">
+              <div class="testimonial-card__avatar">
+                <img src="https://picsum.photos/seed/person-anya/80/80" alt="" width="80" height="80" loading="lazy">
+              </div>
+              <div>
+                <p class="testimonial-card__name">Anya Ruangdej</p>
+                <p class="testimonial-card__role">Product Designer, Bangkok</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="testimonial-card reveal reveal-delay-1">
+            <div class="testimonial-card__stars" aria-label="5 out of 5 stars">
+              ★★★★★
+            </div>
+            <blockquote class="testimonial-card__quote">
+              "My office is technically a 20-minute walk, but I take it every morning for this cold brew. The space inspires me more than my own desk does."
+            </blockquote>
+            <div class="testimonial-card__author">
+              <div class="testimonial-card__avatar">
+                <img src="https://picsum.photos/seed/person-mark/80/80" alt="" width="80" height="80" loading="lazy">
+              </div>
+              <div>
+                <p class="testimonial-card__name">Mark Supapon</p>
+                <p class="testimonial-card__role">Startup Founder</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="testimonial-card reveal reveal-delay-2">
+            <div class="testimonial-card__stars" aria-label="5 out of 5 stars">
+              ★★★★★
+            </div>
+            <blockquote class="testimonial-card__quote">
+              "The baristas here actually want to talk about what they're making. I learned more about coffee in one visit than in years of casual drinking."
+            </blockquote>
+            <div class="testimonial-card__author">
+              <div class="testimonial-card__avatar">
+                <img src="https://picsum.photos/seed/person-thida/80/80" alt="" width="80" height="80" loading="lazy">
+              </div>
+              <div>
+                <p class="testimonial-card__name">Thida Mongkol</p>
+                <p class="testimonial-card__role">UX Researcher</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VISIT ==================== -->
+    <section class="visit" id="visit" aria-labelledby="visitTitle">
+      <div class="container">
+        <div class="visit__grid">
+          <div class="visit__text reveal">
+            <p class="eyebrow">Find Us</p>
+            <h2 class="display-md visit__title" id="visitTitle">
+              Your next great cup is waiting.
+            </h2>
+            <p class="visit__body">
+              Tucked into the heart of Ari — Bangkok's most walkable neighborhood — Brew & Co is easy to find and impossible to forget. Walk in for a single espresso, stay for the afternoon.
+            </p>
+            <div class="visit__actions">
+              <a href="#" class="btn btn--amber">Order to Go</a>
+              <a href="#" class="btn btn--outline-white">Get Directions</a>
+            </div>
+          </div>
+
+          <div class="reveal reveal-delay-2">
+            <div class="hours-card">
+              <p class="hours-card__title">Hours &amp; Location</p>
+              <dl>
+                <div class="hours-row">
+                  <dt class="hours-row__day">Monday – Friday</dt>
+                  <dd class="hours-row__time">7:00 AM – 8:00 PM</dd>
+                </div>
+                <div class="hours-row">
+                  <dt class="hours-row__day">Saturday</dt>
+                  <dd class="hours-row__time">7:30 AM – 9:00 PM</dd>
+                </div>
+                <div class="hours-row">
+                  <dt class="hours-row__day">Sunday</dt>
+                  <dd class="hours-row__time">8:00 AM – 7:00 PM</dd>
+                </div>
+              </dl>
+              <address class="hours-card__address">
+                <strong>Brew &amp; Co — Ari</strong>
+                15/2 Phahon Yothin Soi 7, Ari,<br>
+                Phaya Thai, Bangkok 10400<br><br>
+                <a href="tel:+6620001234" style="color:var(--c-amber-lt);">+66 2 000 1234</a>
+              </address>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <p class="footer__brand-logo">Brew <span>&</span> Co</p>
+          <p class="footer__tagline">Specialty coffee and genuine community,<br>brewed in Bangkok since 2019.</p>
+          <div class="footer__social" aria-label="Follow us">
+            <a href="#" class="footer__social-link" aria-label="Instagram">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+            <a href="#" class="footer__social-link" aria-label="Facebook">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a href="#" class="footer__social-link" aria-label="LINE">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <p class="footer__col-title">Explore</p>
+          <ul class="footer__links" role="list">
+            <li><a href="#menu">Our Menu</a></li>
+            <li><a href="#experience">The Space</a></li>
+            <li><a href="#">Brewing Classes</a></li>
+            <li><a href="#">Wholesale Beans</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <p class="footer__col-title">Company</p>
+          <ul class="footer__links" role="list">
+            <li><a href="#">Our Story</a></li>
+            <li><a href="#">Sourcing Ethics</a></li>
+            <li><a href="#">Work With Us</a></li>
+            <li><a href="#">Press</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <p class="footer__col-title">Connect</p>
+          <ul class="footer__links" role="list">
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Events Calendar</a></li>
+            <li><a href="#">Loyalty Program</a></li>
+            <li><a href="#">Gift Cards</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <p>© 2025 Brew & Co. All rights reserved.</p>
+        <p>Crafted with care in Bangkok, Thailand.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // --- Nav scroll behavior ---
+    const nav = document.getElementById('mainNav');
+    const onScroll = () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // --- Hero image parallax on load ---
+    const heroBg = document.getElementById('heroBg');
+    const heroImg = new Image();
+    heroImg.onload = () => heroBg.classList.add('loaded');
+    heroImg.src = 'https://picsum.photos/seed/specialty-coffee-brew/1600/1000';
+    heroBg.style.backgroundImage = `url('${heroImg.src}')`;
+
+    // --- Mobile nav ---
+    const menuToggle = document.getElementById('menuToggle');
+    const menuClose = document.getElementById('menuClose');
+    const mobileNav = document.getElementById('mobileNav');
+
+    function openMobileNav() {
+      mobileNav.classList.add('open');
+      menuToggle.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileNav() {
+      mobileNav.classList.remove('open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    menuToggle.addEventListener('click', openMobileNav);
+    menuClose.addEventListener('click', closeMobileNav);
+
+    // --- Scroll reveal ---
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            observer.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+    );
+    revealEls.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
