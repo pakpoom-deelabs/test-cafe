@@ -1124,6 +1124,73 @@
     }
 
     /* =============================================
+       FAQ
+    ============================================= */
+    .faq {
+      padding: var(--space-32) 0;
+    }
+
+    .faq__list {
+      margin-top: var(--space-16);
+    }
+
+    .faq__item {
+      border-bottom: 1px solid var(--c-cream-dk);
+    }
+
+    .faq__item:first-child {
+      border-top: 1px solid var(--c-cream-dk);
+    }
+
+    .faq__summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-6);
+      padding: var(--space-6) 0;
+      cursor: pointer;
+      list-style: none;
+      font-family: var(--ff-display);
+      font-size: var(--fs-lg);
+      font-weight: 400;
+      color: var(--c-espresso);
+      line-height: 1.35;
+      transition: color var(--transition);
+    }
+
+    .faq__summary::-webkit-details-marker { display: none; }
+
+    .faq__summary:hover { color: var(--c-amber); }
+
+    .faq__icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1.5px solid var(--c-cream-dk);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--c-amber);
+      transition: background var(--transition), border-color var(--transition), transform var(--transition);
+    }
+
+    .faq__item[open] .faq__icon {
+      background: var(--c-amber);
+      border-color: var(--c-amber);
+      color: var(--c-white);
+      transform: rotate(45deg);
+    }
+
+    .faq__body {
+      padding: 0 0 var(--space-6) 0;
+      font-size: var(--fs-base);
+      line-height: 1.75;
+      color: var(--c-warm-gray);
+      max-width: 620px;
+    }
+
+    /* =============================================
        SCROLL REVEAL
     ============================================= */
     .reveal {
@@ -1535,6 +1602,75 @@
             </div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- ==================== FAQ ==================== -->
+    <section class="faq" id="faq" aria-labelledby="faqTitle">
+      <div class="container--narrow">
+        <header class="section-header reveal">
+          <p class="eyebrow">Curious Minds</p>
+          <h2 class="display-lg section-header__title" id="faqTitle">Questions &amp; Answers</h2>
+          <p class="section-header__sub">Everything you wanted to know about our beans and how we brew them.</p>
+        </header>
+
+        <dl class="faq__list">
+          <details class="faq__item reveal">
+            <summary class="faq__summary">
+              <dt>What is single-origin coffee and why does it matter?</dt>
+              <div class="faq__icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/>
+                </svg>
+              </div>
+            </summary>
+            <dd class="faq__body">
+              Single-origin means every bean in your cup comes from a single farm, cooperative, or defined region — not a blended mix of multiple countries. This traceability lets us taste the distinct terroir of a place: the volcanic soil of Guatemala, the high-altitude fruit notes of Ethiopian Yirgacheffe. It also means farmers receive fair, direct recognition for their work. When you drink single-origin, you're tasting somewhere, not just something.
+            </dd>
+          </details>
+
+          <details class="faq__item reveal reveal-delay-1">
+            <summary class="faq__summary">
+              <dt>What's the difference between light, medium, and dark roast?</dt>
+              <div class="faq__icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/>
+                </svg>
+              </div>
+            </summary>
+            <dd class="faq__body">
+              Roast level controls how much the bean's natural character is transformed by heat. Light roasts preserve the origin's bright, complex flavors — think florals, fruit, and tea-like clarity — with higher acidity and more caffeine. Medium roasts balance origin character with roast sweetness: caramel, nuts, and chocolate. Dark roasts push beans to their limit, trading origin nuance for bold, smoky, bitter depth. At Brew &amp; Co we lean light-to-medium to let the bean speak for itself.
+            </dd>
+          </details>
+
+          <details class="faq__item reveal reveal-delay-2">
+            <summary class="faq__summary">
+              <dt>How should I store coffee beans at home?</dt>
+              <div class="faq__icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/>
+                </svg>
+              </div>
+            </summary>
+            <dd class="faq__body">
+              The four enemies of fresh coffee are air, moisture, heat, and light. Store beans in an airtight, opaque container at room temperature — not in the fridge, where condensation and odor absorption quietly ruin them. Buy only what you'll drink within two to three weeks of the roast date, and grind just before brewing. A whole bean kept properly in a sealed container will outlast pre-ground coffee by weeks. Freshness is the single biggest upgrade most home brewers can make.
+            </dd>
+          </details>
+
+          <details class="faq__item reveal reveal-delay-3">
+            <summary class="faq__summary">
+              <dt>What brew method is best for beginners?</dt>
+              <div class="faq__icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/>
+                </svg>
+              </div>
+            </summary>
+            <dd class="faq__body">
+              The French Press is the friendliest starting point: no paper filters, forgiving ratios, and a rich, full-bodied result every time. If you want to explore clarity and brightness, the pour-over (V60 or Kalita Wave) rewards curiosity without demanding expensive equipment. Either way, the most important tools are a kitchen scale and a kettle — consistency beats technique every time. Come into Brew &amp; Co and we'll walk you through any method hands-on, no purchase required.
+            </dd>
+          </details>
+        </dl>
       </div>
     </section>
   </main>

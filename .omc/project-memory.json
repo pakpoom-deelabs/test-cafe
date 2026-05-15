@@ -1,0 +1,58 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1778818533680,
+  "projectRoot": "/Users/pakpoom/Documents/Claude/Projects/Claude Automation/web-builder/data/sites/test-cafe",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [],
+    "gitBranches": {
+      "defaultBranch": "main",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "variants": {
+      "path": "variants",
+      "purpose": null,
+      "fileCount": 5,
+      "lastAccessed": 1778818533670,
+      "keyFiles": [
+        "v1.html",
+        "v2.html",
+        "v3.html",
+        "v4.html",
+        "v5.html"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "index.html",
+      "accessCount": 4,
+      "lastAccessed": 1778818620778,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}
